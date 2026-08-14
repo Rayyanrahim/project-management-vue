@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #a952ff;
+  --color-primary-hover: #983eeb;
+
+  --color-primary-login: #202020;
+  --color-primary-login-hover: #363636;
+
+  --color-auth-link: #0b68cb;
+  --color-auth-link-hover: #0957ab;
+  --color-auth-disabled: #bbbbbb;
+}
+
+#app {
+  height: 100%;
+}
+
+/* Auth pages remap primary → primary-login. App/dashboard keeps the real primary. */
+.theme-auth {
+  --color-primary: var(--color-primary-login);
+  --color-primary-hover: var(--color-primary-login-hover);
+}
+
+.theme-auth button:disabled:not([data-loading]) {
+  background-color: var(--color-auth-disabled);
+  color: #fff;
+  opacity: 1;
+}
+
+.auth-gradient {
+  background-color: #fff;
+  background-image:
+    radial-gradient(ellipse 90% 42% at 50% -8%, rgb(169 82 255 / 0.14), transparent 58%),
+    radial-gradient(ellipse 48% 32% at 12% 0%, rgb(255 176 214 / 0.1), transparent 52%),
+    radial-gradient(ellipse 48% 32% at 88% 0%, rgb(168 206 255 / 0.1), transparent 52%);
+}
