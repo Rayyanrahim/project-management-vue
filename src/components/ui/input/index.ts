@@ -9,7 +9,7 @@ export const inputVariants = cva(
     variants: {
       variant: {
         light:
-          'bg-white text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-primary',
+          'bg-white text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:rounded-md focus:outline-1 focus:-outline-offset-1 focus:outline-gray-900 focus:ring-2 focus:ring-gray-300',
       },
     },
     defaultVariants: {
