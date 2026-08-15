@@ -12,9 +12,9 @@
 
       <Button type="button" variant="outline" size="lg" class="h-10 w-full">
         <span class="absolute left-3 inline-flex size-5 items-center justify-center">
-          <img :src="ssoIcon" alt="" class="size-5" />
+          <img :src="githubIcon" alt="" class="size-5" />
         </span>
-        Continue with SSO
+        Continue with GitHub
       </Button>
     </div>
 
@@ -60,8 +60,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
+import githubIcon from '@/assets/svg/github.svg'
 import googleIcon from '@/assets/svg/google.svg'
-import ssoIcon from '@/assets/svg/sso.svg'
 import eyeIcon from '@/assets/svg/eye.svg'
 import eyeOffIcon from '@/assets/svg/eye-off.svg'
 import spinnerIcon from '@/assets/svg/spinner.svg'
