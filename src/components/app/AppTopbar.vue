@@ -5,7 +5,7 @@
         T
       </div>
       <div class="flex items-center gap-[6px]">
-        <span class="text-[13px] font-medium text-gray-900">testing-15</span>
+        <span class="text-[13px] font-medium text-[var(--color-app-black)]">testing-15</span>
         <ChevronDown class="h-3 w-3 text-gray-500" />
       </div>
     </div>

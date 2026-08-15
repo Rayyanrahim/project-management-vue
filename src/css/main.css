@@ -7,13 +7,18 @@
   --color-primary-hover: #983eeb;
   --color-border-default: #dbe1ea;
   --color-surface-muted: #e8e8e8;
+  --color-app-black: #202020;
+  --color-app-muted: #646464;
 
   --color-primary-login: #202020;
   --color-primary-login-hover: #363636;
 
+  --color-para : #646464;
+
   --color-auth-link: #0b68cb;
   --color-auth-link-hover: #0957ab;
   --color-auth-disabled: #bbbbbb;
+  --color-sidebar-bg: #F9F9F9;
 }
 
 #app {
