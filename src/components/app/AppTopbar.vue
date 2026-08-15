@@ -5,7 +5,7 @@
         class="flex h-7 cursor-pointer items-center gap-[6px] rounded-md bg-app-muted-foreground px-1.5 hover:bg-surface-muted"
       >
         <template #default="{ open }">
-          <div class="flex h-4.5 w-4.5 items-center justify-center rounded-md px-[6px] text-[12px] font-semibold text-white bg-sky-700">
+          <div class="flex h-4.5 w-4.5 items-center justify-center rounded-sm px-[6px] text-[12px] font-semibold text-white bg-sky-700">
             T
           </div>
           <div class="flex items-center gap-[6px]">
