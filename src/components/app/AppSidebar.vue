@@ -1,7 +1,7 @@
 <template>
   <aside class="flex h-full w-[200px] min-w-[200px] flex-col border-r border-[var(--color-border-default)] bg-sidebar-bg">
     <div class="flex items-center justify-between bg-sidebar-bg pr-2 pb-1 pl-3 pt-2">
-      <h2 class="text-[16px] font-semibold text-[var(--color-app-black)]">Projects</h2>
+      <h2 class="text-[16px] font-semibold text-app-black">Home</h2>
       <div class="flex items-center gap-2">
         <IconButton variant="ghost" class="cursor-pointer" aria-label="Panel">
           <PanelLeft class="h-4 w-4" />
@@ -34,12 +34,12 @@
       <Accordion type="single" collapsible default-value="workspace" class="w-full">
         <AccordionItem value="workspace">
           <AccordionTrigger
-            class="group mb-1 flex h-7 w-full items-center gap-1 rounded-lg px-2 text-left text-xs font-medium text-[var(--color-app-muted)] transition-colors cursor-pointer hover:bg-surface-muted hover:text-app-black"
+            class="group mb-1 relative flex h-7 w-full items-center gap-1 rounded-lg px-2 text-left text-xs font-medium text-[var(--color-app-muted)] transition-colors cursor-pointer hover:bg-surface-muted hover:text-app-black"
           >
             <template #default="{ open }">
               <span>Workspace</span>
               <span
-                class="flex h-4 w-4 items-center justify-center transition-opacity"
+                class="absolute left-17 top-1.75 flex h-4 w-4 items-center justify-center transition-opacity"
                 :class="open ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'"
               >
                 <img
