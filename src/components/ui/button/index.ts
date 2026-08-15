@@ -11,6 +11,8 @@ export const buttonVariants = cva(
         primary: 'bg-primary text-white hover:bg-primary-hover focus-visible:outline-primary',
         outline:
           'bg-white text-gray-900 outline-1 -outline-offset-1 outline-gray-300 hover:bg-gray-50 focus-visible:outline-primary',
+        'app-outline':
+          'bg-white text-gray-900 outline-1 -outline-offset-1 outline-[var(--color-border-default)] hover:bg-gray-50 focus-visible:outline-[var(--color-border-default)]',
       },
       size: {
         md: 'px-3 py-1.5 text-sm/6',

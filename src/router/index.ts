@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const Index = () => import('@/views/Index.vue')
+const AppLayout = () => import('@/layouts/AppLayout.vue')
+const Dashboard = () => import('@/views/app/Dashboard.vue')
 const AuthLayout = () => import('@/layouts/AuthLayout.vue')
 const Login = () => import('@/views/auth/Login.vue')
 const LoginRecover = () => import('@/views/auth/LoginRecover.vue')
@@ -13,8 +14,14 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'Index',
-      component: Index,
+      component: AppLayout,
+      children: [
+        {
+          path: '',
+          name: 'Dashboard',
+          component: Dashboard,
+        },
+      ],
     },
     {
       path: '/login',

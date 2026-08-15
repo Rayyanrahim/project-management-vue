@@ -9,11 +9,11 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div :class="cn(label ? 'flex items-center gap-3' : 'h-px bg-gray-200', props.class)" role="separator">
+  <div :class="cn(label ? 'flex items-center gap-3' : 'h-px bg-[var(--color-border-default)]', props.class)" role="separator">
     <template v-if="label">
-      <div class="h-px flex-1 bg-gray-200" />
+      <div class="h-px flex-1 bg-[var(--color-border-default)]" />
       <span class="text-sm text-gray-500">{{ label }}</span>
-      <div class="h-px flex-1 bg-gray-200" />
+      <div class="h-px flex-1 bg-[var(--color-border-default)]" />
     </template>
   </div>
 </template>

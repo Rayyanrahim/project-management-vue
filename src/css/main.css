@@ -1,9 +1,12 @@
 @import "tailwindcss";
 @import "./auth.css";
+@import "./app.css";
 
 @theme {
   --color-primary: #a952ff;
   --color-primary-hover: #983eeb;
+  --color-border-default: #dbe1ea;
+  --color-surface-muted: #e8e8e8;
 
   --color-primary-login: #202020;
   --color-primary-login-hover: #363636;
