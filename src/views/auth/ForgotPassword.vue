@@ -6,8 +6,9 @@
         <form class="space-y-4" @submit.prevent="onSubmit">
           <Input id="email" v-model="email" type="email" name="email" autocomplete="email" placeholder="Work email" />
 
-          <Button type="submit" size="lg" class="w-full" :disabled="!isFormValid">
-            Send me the link
+          <Button type="submit" size="lg" class="w-full" :disabled="!isFormValid" :loading="submitting">
+            <img v-if="submitting" :src="spinnerIcon" alt="" class="size-5 animate-spin" />
+            <template v-else>Send me the link</template>
           </Button>
         </form>
       </div>
@@ -20,16 +21,19 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import spinnerIcon from '@/assets/svg/spinner.svg'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 const email = ref('')
+const submitting = ref(false)
 
 const isFormValid = computed(() => Boolean(email.value.trim()))
 
-function onSubmit() {
-  if (!isFormValid.value) return
+async function onSubmit() {
+  if (!isFormValid.value || submitting.value) return
+  submitting.value = true
   // Reset link flow will be wired up later.
 }
 </script>

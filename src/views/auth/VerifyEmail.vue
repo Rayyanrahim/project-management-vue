@@ -12,8 +12,9 @@
             <p class="text-base font-medium text-gray-900">test675@gmail.com</p>
           </div>
 
-          <Button type="submit" size="lg" class="w-full">
-            Verify
+          <Button type="submit" size="lg" class="w-full" :disabled="!isFormValid" :loading="submitting">
+            <img v-if="submitting" :src="spinnerIcon" alt="" class="size-5 animate-spin" />
+            <template v-else>Verify</template>
           </Button>
 
           <p class="text-center text-sm/6 text-gray-500">
@@ -39,14 +40,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import spinnerIcon from '@/assets/svg/spinner.svg'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import { Button } from '@/components/ui/button'
 import { PinInput } from '@/components/ui/pin-input'
 
 const code = ref('')
+const submitting = ref(false)
 
-function onSubmit() {
+const isFormValid = computed(() => code.value.trim().length === 4)
+
+async function onSubmit() {
+  if (!isFormValid.value || submitting.value) return
+  submitting.value = true
   // Verification flow will be wired up later.
 }
 </script>
