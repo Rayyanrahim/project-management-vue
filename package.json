@@ -21,6 +21,7 @@
     "pinia": "^4.0.2",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
+    "tailwindcss-animate": "^1.0.7",
     "vue": "^3.5.40",
     "vue-router": "^5.2.0"
   },

@@ -1,14 +1,32 @@
 <template>
   <header class="flex h-10 w-full justify-between items-center gap-2 border-x border-t border-[var(--color-border-default)] bg-white px-2.5">
-    <div class="hidden h-7 items-center gap-[6px] rounded-md bg-[var(--color-surface-muted)] px-1.5 lg:flex">
-      <div class="flex h-4.5 w-4.5 items-center justify-center rounded-md  px-[6px] text-[12px] font-semibold text-white bg-sky-700">
-        T
-      </div>
-      <div class="flex items-center gap-[6px]">
-        <span class="text-[13px] font-medium text-[var(--color-app-black)]">testing-15</span>
-        <ChevronDown class="h-3 w-3 text-gray-500" />
-      </div>
-    </div>
+    <Dropdown class="hidden lg:inline-flex">
+      <DropdownTrigger
+        class="flex h-7 cursor-pointer items-center gap-[6px] rounded-md bg-app-muted-foreground px-1.5 hover:bg-surface-muted"
+      >
+        <template #default="{ open }">
+          <div class="flex h-4.5 w-4.5 items-center justify-center rounded-md px-[6px] text-[12px] font-semibold text-white bg-sky-700">
+            T
+          </div>
+          <div class="flex items-center gap-[6px]">
+            <span class="text-[13px] font-medium text-app-black">testing-15</span>
+            <ChevronDown class="h-3 w-3 text-para hover:text-app-black transition-transform " />
+          </div>
+        </template>
+      </DropdownTrigger>
+
+      <DropdownContent class="w-48 " align="start">
+        <DropdownItem class="text-[13px] text-app-black">
+          testing-15
+        </DropdownItem>
+        <DropdownItem class="text-[13px] text-app-black">
+          K-labs
+        </DropdownItem>
+        <DropdownItem class="text-[13px] text-app-black">
+          Create workspace
+        </DropdownItem>
+      </DropdownContent>
+    </Dropdown>
 
     <div class="ml-2 flex  items-center">
       <Button
@@ -33,6 +51,7 @@
 <script setup lang="ts">
 import { ChevronDown, Search } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@/components/ui/dropdown'
 
 defineEmits<{
   (event: 'open-sidebar'): void

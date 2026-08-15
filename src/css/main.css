@@ -10,6 +10,8 @@
   --color-app-black: #202020;
   --color-app-muted: #646464;
 
+  --color-app-muted-foreground: #0000000f;
+
   --color-primary-login: #202020;
   --color-primary-login-hover: #363636;
 
@@ -65,4 +67,20 @@
     radial-gradient(ellipse 34% 24% at 16% 4%, rgb(255 183 176 / 0.3), transparent 58%),
     radial-gradient(ellipse 36% 24% at 84% 4%, rgb(181 220 255 / 0.32), transparent 58%);
   background-repeat: no-repeat;
+}
+
+.dropdown-enter-active {
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+}
+
+.dropdown-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
