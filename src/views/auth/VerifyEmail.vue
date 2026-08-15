@@ -1,9 +1,9 @@
 <template>
-  <div class="flex min-h-0 flex-1 self-stretch flex-col">
-    <div class="flex flex-1 flex-col justify-center">
+  <div class="auth-container">
+    <div class="auth-content">
       <AuthHeader title="Verify your email" />
 
-      <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+      <div class="auth-panel">
         <form class="space-y-4" @submit.prevent="onSubmit">
           <PinInput v-model="code" :length="4" input-class="h-13 w-13 text-2xl" />
 
@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <p class="pb-4 text-center text-sm/6">
+    <p class="auth-help">
       <a href="#" class="auth-muted-link">Need help?</a>
     </p>
   </div>

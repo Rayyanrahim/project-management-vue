@@ -2,7 +2,7 @@
   <AuthHeader title="Seconds to sign up!" prompt="Already have an account?" :to="{ name: 'Login' }"
     link-text="Sign in" />
 
-  <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+  <div class="auth-panel">
     <Button type="button" variant="outline" size="lg" class="h-10 w-full">
       <span class="absolute left-3 inline-flex size-5 items-center justify-center">
         <img :src="googleIcon" alt="" class="size-5" />

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./auth.css";
 
 @theme {
   --color-primary: #a952ff;
@@ -52,7 +53,8 @@
 .auth-gradient {
   background-color: #fff;
   background-image:
-    radial-gradient(ellipse 90% 42% at 50% -8%, rgb(169 82 255 / 0.14), transparent 58%),
-    radial-gradient(ellipse 48% 32% at 12% 0%, rgb(255 176 214 / 0.1), transparent 52%),
-    radial-gradient(ellipse 48% 32% at 88% 0%, rgb(168 206 255 / 0.1), transparent 52%);
+    radial-gradient(ellipse 78% 34% at 50% 0%, rgb(214 172 255 / 0.34), transparent 68%),
+    radial-gradient(ellipse 34% 24% at 16% 4%, rgb(255 183 176 / 0.3), transparent 58%),
+    radial-gradient(ellipse 36% 24% at 84% 4%, rgb(181 220 255 / 0.32), transparent 58%);
+  background-repeat: no-repeat;
 }

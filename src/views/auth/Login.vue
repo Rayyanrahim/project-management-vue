@@ -1,7 +1,7 @@
 <template>
   <AuthHeader title="Welcome back!" prompt="Don't have an account?" :to="{ name: 'Signup' }" link-text="Sign up" />
 
-  <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+  <div class="auth-panel">
     <div class="space-y-2">
       <Button type="button" variant="outline" size="lg" class="h-10 w-full">
         <span class="absolute left-3 inline-flex size-5 items-center justify-center">
