@@ -43,11 +43,13 @@
     </form>
 
     <p class="mt-3 text-center text-sm/6">
-      <a href="#" class="font-semibold text-auth-link hover:text-auth-link-hover">Forgot Password?</a>
+      <RouterLink :to="{ name: 'ForgotPassword' }" class="auth-link">
+        Forgot Password?
+      </RouterLink>
     </p>
 
     <p class="mt-5 text-center text-sm/6">
-      <a href="#" class="text-gray-500 hover:text-gray-700">Need help?</a>
+      <a href="#" class="auth-muted-link">Need help?</a>
     </p>
   </div>
 </template>

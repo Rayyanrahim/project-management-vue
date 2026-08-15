@@ -4,10 +4,10 @@
       <img :src="logoIcon" alt="" class="h-9 w-9" />
     </div>
     <h2 class="mt-4 text-center text-2xl/9 font-bold tracking-tight text-gray-900">{{ title }}</h2>
-    <p class="mt-1 text-center text-sm/6 text-gray-500">
+    <p v-if="prompt && to && linkText" class="mt-1 text-center text-sm/6 text-gray-500">
       {{ prompt }}
       {{ ' ' }}
-      <RouterLink :to="to" class="font-semibold text-auth-link hover:text-auth-link-hover">{{ linkText }}</RouterLink>
+      <RouterLink :to="to" class="auth-link">{{ linkText }}</RouterLink>
     </p>
   </div>
 </template>
@@ -18,8 +18,8 @@ import type { RouteLocationRaw } from 'vue-router'
 
 defineProps<{
   title: string
-  prompt: string
-  to: RouteLocationRaw
-  linkText: string
+  prompt?: string
+  to?: RouteLocationRaw
+  linkText?: string
 }>()
 </script>

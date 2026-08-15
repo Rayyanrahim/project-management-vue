@@ -35,13 +35,13 @@
     <p class="mt-5 text-center text-xs/5 text-gray-500">
       By continuing, you agree to our
       {{ ' ' }}
-      <a href="#" class="font-medium text-gray-700 hover:text-gray-900">Terms of Service</a>
+      <a href="#" class="font-medium text-gray-700 hover:text-gray-900 hover:underline">Terms of Service</a>
       {{ ' ' }}
       and
       {{ ' ' }}
-      <a href="#" class="font-medium text-gray-700 hover:text-gray-900">Privacy Policy</a>.
+      <a href="#" class="font-medium text-gray-700 hover:text-gray-900 hover:underline">Privacy Policy</a>.
       {{ ' ' }}
-      <a href="#" class="hover:text-gray-700">Need help?</a>
+      <a href="#" class="auth-muted-link">Need help?</a>
     </p>
   </div>
 </template>

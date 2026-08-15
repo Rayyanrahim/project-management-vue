@@ -28,6 +28,27 @@
   opacity: 1;
 }
 
+.theme-auth .auth-link {
+  color: var(--color-auth-link);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.theme-auth .auth-link:hover {
+  color: var(--color-auth-link-hover);
+  text-decoration: underline;
+}
+
+.theme-auth .auth-muted-link {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.theme-auth .auth-muted-link:hover {
+  color: #374151;
+  text-decoration: underline;
+}
+
 .auth-gradient {
   background-color: #fff;
   background-image:
