@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const Index = () => import('@/views/Index.vue')
 const AuthLayout = () => import('@/layouts/AuthLayout.vue')
 const Login = () => import('@/views/auth/Login.vue')
+const LoginRecover = () => import('@/views/auth/LoginRecover.vue')
 const Signup = () => import('@/views/auth/Signup.vue')
 const ForgotPassword = () => import('@/views/auth/ForgotPassword.vue')
 const VerifyEmail = () => import('@/views/auth/VerifyEmail.vue')
@@ -23,6 +24,11 @@ const router = createRouter({
           path: '',
           name: 'Login',
           component: Login,
+        },
+        {
+          path: 'recover',
+          name: 'LoginRecover',
+          component: LoginRecover,
         },
       ],
     },

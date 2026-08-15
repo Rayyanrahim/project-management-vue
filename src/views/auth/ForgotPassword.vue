@@ -21,11 +21,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import spinnerIcon from '@/assets/svg/spinner.svg'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+const router = useRouter()
 const email = ref('')
 const submitting = ref(false)
 
@@ -34,6 +36,6 @@ const isFormValid = computed(() => Boolean(email.value.trim()))
 async function onSubmit() {
   if (!isFormValid.value || submitting.value) return
   submitting.value = true
-  // Reset link flow will be wired up later.
+  await router.push({ name: 'LoginRecover' })
 }
 </script>
