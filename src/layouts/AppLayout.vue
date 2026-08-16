@@ -1,30 +1,39 @@
 <template>
   <div class="app-shell">
-    <AppTopbar @open-sidebar="sidebarOpen = true" />
+    <AppTopbar />
 
     <div class="app-shell-body">
       <div class="app-frame">
         <div class="app-content">
-          <div class="hidden lg:block">
-            <AppSidebar />
+          <div
+            data-testid="mobile-sidebar"
+            class="app-sidebar-mobile block lg:hidden"
+            :class="mobileSidebarOpen ? 'app-sidebar-mobile-open' : 'app-sidebar-mobile-closed'"
+          >
+          <AppSidebar mode="mobile" />
+          </div>
+
+          <div
+            data-testid="desktop-sidebar"
+            class="app-sidebar-desktop hidden lg:block"
+            :class="desktopSidebarOpen ? 'app-sidebar-desktop-open' : 'app-sidebar-desktop-closed'"
+          >
+            <AppSidebar mode="desktop" />
           </div>
 
           <RouterView />
         </div>
       </div>
     </div>
-
-    <Sheet v-model="sidebarOpen" class="w-[200px] lg:hidden">
-      <AppSidebar />
-    </Sheet>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import AppSidebar from '@/components/app/AppSidebar.vue'
 import AppTopbar from '@/components/app/AppTopbar.vue'
-import { Sheet } from '@/components/ui/sheet'
+import { useSidebarStore } from '@/stores/sidebar'
 
-const sidebarOpen = ref(false)
+const sidebarStore = useSidebarStore()
+const { desktopSidebarOpen, mobileSidebarOpen } = storeToRefs(sidebarStore)
 </script>

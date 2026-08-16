@@ -1,5 +1,6 @@
 <template>
   <header class="flex h-10 w-full justify-between items-center gap-2 border-x border-t border-[var(--color-border-default)] bg-white px-2.5">
+    <div class="flex items-center gap-2">
     <Dropdown class="hidden lg:inline-flex">
       <DropdownTrigger
         class="app-control-height flex cursor-pointer items-center gap-[6px] rounded-md bg-app-muted-foreground px-1.5 hover:bg-surface-muted"
@@ -27,6 +28,7 @@
         </DropdownItem>
       </DropdownContent>
     </Dropdown>
+    </div>
 
     <div class="ml-2 flex  items-center">
       <Button
@@ -52,8 +54,4 @@
 import { ChevronDown, Search } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@/components/ui/dropdown'
-
-defineEmits<{
-  (event: 'open-sidebar'): void
-}>()
 </script>

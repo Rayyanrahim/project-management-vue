@@ -24,12 +24,18 @@ watch(model, (open) => {
 
 <template>
   <Teleport to="body">
-    <div v-if="model" class="fixed inset-0 z-50">
-      <SheetOverlay :class="props.overlayClass" @click="model = false" />
+    <Transition name="sheet-root">
+      <div v-if="model" class="fixed inset-0 z-50">
+        <Transition name="sheet-overlay">
+          <SheetOverlay v-if="model" :class="props.overlayClass" @click="model = false" />
+        </Transition>
 
-      <SheetContent :side="side" :class="props.class">
-        <slot />
-      </SheetContent>
-    </div>
+        <Transition name="sheet-content">
+          <SheetContent v-if="model" :side="side" :class="props.class">
+            <slot />
+          </SheetContent>
+        </Transition>
+      </div>
+    </Transition>
   </Teleport>
 </template>
