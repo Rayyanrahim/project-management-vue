@@ -1,7 +1,7 @@
 <template>
   <header class="flex h-10 w-full justify-between items-center gap-2 border-x border-t border-[var(--color-border-default)] bg-white px-2.5">
     <div class="flex items-center gap-2">
-    <Dropdown class="hidden lg:inline-flex">
+    <Dropdown class="inline-flex">
       <DropdownTrigger
         class="app-control-height flex cursor-pointer items-center gap-[6px] rounded-md bg-app-muted-foreground px-1.5 hover:bg-surface-muted"
       >
@@ -10,20 +10,22 @@
             T
           </div>
           <div class="flex items-center gap-[6px]">
-            <span class="text-[13px] font-medium text-app-black">testing-15</span>
+            <span class="hidden text-[13px] font-medium text-app-black lg:inline">
+              testing-15
+            </span>
             <ChevronDown class="h-3 w-3 text-para hover:text-app-black transition-transform " />
           </div>
         </template>
       </DropdownTrigger>
 
-      <DropdownContent class="w-48 " align="start">
-        <DropdownItem class="app-control-height text-[13px] text-app-black">
+      <DropdownContent class="w-72" align="start">
+        <DropdownItem class="app-control-height text-app-black">
           testing-15
         </DropdownItem>
-        <DropdownItem class="app-control-height text-[13px] text-app-black">
+        <DropdownItem class="app-control-height text-app-black">
           K-labs
         </DropdownItem>
-        <DropdownItem class="app-control-height text-[13px] text-app-black">
+        <DropdownItem class="app-control-height text-app-black">
           Create workspace
         </DropdownItem>
       </DropdownContent>
