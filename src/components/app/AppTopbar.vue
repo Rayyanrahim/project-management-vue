@@ -47,6 +47,7 @@
     <div class="flex items-center gap-2.5">
       <Dropdown class="inline-flex">
         <DropdownTrigger
+          aria-label="Open profile menu"
           class="inline-flex h-8 cursor-pointer items-center gap-0.5 rounded-full px-1 text-app-black transition-colors hover:bg-surface-muted"
         >
           <template #default="{ open }">
@@ -60,44 +61,58 @@
         </DropdownTrigger>
 
         <DropdownContent
-          class="w-72 max-h-[calc(100dvh-4.5rem)] max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain"
+          class="w-72 max-w-[calc(100vw-1rem)]"
           align="end"
         >
-          <div class="px-3 pb-3 pt-1">
-            <div class="flex items-start gap-2.5">
-              <div class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-600 text-sm font-semibold text-white">
-                R
-                <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-sm border-2 border-white bg-emerald-500" />
-              </div>
-
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center text-app-black">
-                  <span class="truncate text-[13px] font-medium">rayyan.klabs@gmail.com</span>
+          <div class="max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain">
+            <div class="px-3 pb-3 pt-1">
+              <div class="flex items-start gap-2.5">
+                <div class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-600 text-sm font-semibold text-white">
+                  R
+                  <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-sm border-2 border-white bg-emerald-500" />
                 </div>
-                <div class="flex items-center leading-3 text-[12px] text-para">
-                  <span>Online</span>
+
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center text-app-black">
+                    <span class="truncate text-[13px] font-medium">rayyan.klabs@gmail.com</span>
+                  </div>
+                  <div class="flex items-center leading-3 text-[12px] text-para">
+                    <span>Online</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="border-t border-[var(--color-border-default)] pt-2">
-            <DropdownItem class="gap-2">
-              <BellOff class="h-4 w-4" />
-              <span>Mute notifications</span>
-            </DropdownItem>
-            <DropdownItem class="gap-2">
-              <Settings class="h-4 w-4" />
-              <span>Settings</span>
-            </DropdownItem>
-            <DropdownItem class="gap-2">
-              <Bell class="h-4 w-4" />
-              <span>Notifications</span>
-            </DropdownItem>
-            <DropdownItem class="gap-2">
-              <CircleArrowRight class="h-4 w-4" />
-              <span>Logout</span>
-            </DropdownItem>
+            <div class="border-t border-[var(--color-border-default)] pt-2">
+              <DropdownSub>
+                <DropdownSubTrigger
+                  :icon="VolumeX"
+                  :end-icon="ChevronRight"
+                  aria-label="Toggle mute notifications submenu"
+                >
+                  <span>Mute notifications</span>
+                </DropdownSubTrigger>
+
+                <DropdownSubContent class="w-40">
+                  <DropdownItem>
+                    <span>30 minutes</span>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <span>50 minutes</span>
+                  </DropdownItem>
+                </DropdownSubContent>
+              </DropdownSub>
+
+              <DropdownItem :icon="Settings">
+                <span>Settings</span>
+              </DropdownItem>
+              <DropdownItem :icon="Bell">
+                <span>Notifications</span>
+              </DropdownItem>
+              <DropdownItem :icon="CircleArrowRight">
+                <span>Logout</span>
+              </DropdownItem>
+            </div>
           </div>
         </DropdownContent>
       </Dropdown>
@@ -106,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { Bell, BellOff, ChevronDown, CircleArrowRight , Search, Settings } from '@lucide/vue'
+import { Bell, VolumeX, ChevronDown, ChevronRight, CircleArrowRight , Search, Settings } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
-import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@/components/ui/dropdown'
+import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubContent, DropdownSubTrigger, DropdownTrigger } from '@/components/ui/dropdown'
 </script>

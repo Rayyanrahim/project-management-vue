@@ -68,4 +68,26 @@ describe('App', () => {
 
     expect(wrapper.get('[data-testid="mobile-sidebar"]').classes()).toContain('app-sidebar-mobile-closed')
   })
+
+  it('opens the mute notifications submenu inside the profile dropdown', async () => {
+    await router.push('/')
+    await router.isReady()
+
+    const wrapper = mount(App, {
+      global: {
+        plugins: [createPinia(), router],
+      },
+    })
+
+    expect(wrapper.text()).not.toContain('30 minutes')
+
+    await wrapper.get('[aria-label="Open profile menu"]').trigger('click')
+    await nextTick()
+
+    await wrapper.get('[aria-label="Toggle mute notifications submenu"]').trigger('click')
+    await nextTick()
+
+    expect(wrapper.text()).toContain('30 minutes')
+    expect(wrapper.text()).toContain('50 minutes')
+  })
 })
