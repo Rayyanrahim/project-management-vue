@@ -44,10 +44,17 @@
       </Button>
     </div>
 
-    <div class=" flex items-center gap-2.5">
-      <div class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-800 text-[10px] font-semibold text-white">
-        R
-      </div>
+    <div class="flex items-center gap-2.5">
+      <button
+        type="button"
+        aria-label="Open profile menu"
+        class="inline-flex h-8 cursor-pointer items-center gap-1 rounded-full px-1.5 text-app-black transition-colors hover:bg-surface-muted"
+      >
+        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-800 text-[10px] font-semibold text-white">
+          R
+        </div>
+        <ChevronDown class="h-3 w-3 text-para transition-colors hover:text-app-black" />
+      </button>
     </div>
   </header>
 </template>
