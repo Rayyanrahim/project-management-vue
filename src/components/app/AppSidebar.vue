@@ -17,7 +17,7 @@
           v-for="item in primaryNav"
           :key="item.label"
           type="button"
-          class="flex h-7 w-full items-center gap-2.5 rounded-lg px-2 text-left text-[14px] transition-colors cursor-pointer"
+          class="app-control-height flex w-full items-center gap-2.5 rounded-lg px-2 text-left text-[14px] transition-colors cursor-pointer"
           :class="item.active ? 'bg-surface-muted font-medium text-app-black' : 'text-para hover:bg-surface-muted hover:text-app-black'"
         >
           <component
@@ -34,7 +34,7 @@
       <Accordion type="single" collapsible default-value="workspace" class="w-full">
         <AccordionItem value="workspace">
           <AccordionTrigger
-            class="group mb-1 relative flex h-7 w-full items-center gap-1 rounded-lg px-2 text-left text-xs font-medium text-[var(--color-app-muted)] transition-colors cursor-pointer hover:bg-surface-muted hover:text-app-black"
+            class="app-control-height group mb-1 relative flex w-full items-center gap-1 rounded-lg px-2 text-left text-xs font-medium text-[var(--color-app-muted)] transition-colors cursor-pointer hover:bg-surface-muted hover:text-app-black"
           >
             <template #default="{ open }">
               <span>Workspace</span>
@@ -58,7 +58,7 @@
               v-for="item in workspaceNav"
               :key="item.label"
               type="button"
-              class="flex h-7 w-full items-center gap-2.5 rounded-lg px-2 text-left text-[14px] transition-colors cursor-pointer"
+              class="app-control-height flex w-full items-center gap-2.5 rounded-lg px-2 text-left text-[14px] transition-colors cursor-pointer"
               :class="item.active ? 'bg-surface-muted font-medium text-app-black' : 'text-para hover:bg-surface-muted hover:text-app-black'"
             >
               <component
@@ -71,9 +71,6 @@
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-
-
-      
     </div>
   </aside>
 </template>

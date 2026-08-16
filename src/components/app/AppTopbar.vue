@@ -2,7 +2,7 @@
   <header class="flex h-10 w-full justify-between items-center gap-2 border-x border-t border-[var(--color-border-default)] bg-white px-2.5">
     <Dropdown class="hidden lg:inline-flex">
       <DropdownTrigger
-        class="flex h-7 cursor-pointer items-center gap-[6px] rounded-md bg-app-muted-foreground px-1.5 hover:bg-surface-muted"
+        class="app-control-height flex cursor-pointer items-center gap-[6px] rounded-md bg-app-muted-foreground px-1.5 hover:bg-surface-muted"
       >
         <template #default="{ open }">
           <div class="flex h-4.5 w-4.5 items-center justify-center rounded-sm px-[6px] text-[12px] font-semibold text-white bg-sky-700">
@@ -16,13 +16,13 @@
       </DropdownTrigger>
 
       <DropdownContent class="w-48 " align="start">
-        <DropdownItem class="text-[13px] text-app-black">
+        <DropdownItem class="app-control-height text-[13px] text-app-black">
           testing-15
         </DropdownItem>
-        <DropdownItem class="text-[13px] text-app-black">
+        <DropdownItem class="app-control-height text-[13px] text-app-black">
           K-labs
         </DropdownItem>
-        <DropdownItem class="text-[13px] text-app-black">
+        <DropdownItem class="app-control-height text-[13px] text-app-black">
           Create workspace
         </DropdownItem>
       </DropdownContent>
@@ -33,7 +33,7 @@
         type="button"
         variant="app-outline"
         size="lg"
-        class="h-7 min-w-[250px] justify-start rounded-xl border-[var(--color-border-default)] px-3 text-[12px] font-medium text-gray-500 shadow-sm"
+        class="app-control-height min-w-[250px] justify-start rounded-xl border-[var(--color-border-default)] px-3 text-[12px] font-medium text-gray-500 shadow-sm"
       >
         <Search class="mr-2 h-3.5 w-3.5 text-gray-400" />
         Search

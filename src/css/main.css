@@ -21,6 +21,7 @@
   --color-auth-link-hover: #0957ab;
   --color-auth-disabled: #bbbbbb;
   --color-sidebar-bg: #F9F9F9;
+  --app-control-height: 28px;
 }
 
 #app {
