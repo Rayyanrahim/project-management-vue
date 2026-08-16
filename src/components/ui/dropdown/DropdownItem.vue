@@ -40,7 +40,7 @@ function onClick() {
     :disabled="disabled"
     :class="
       cn(
-        'mt-0 mx-2 flex min-h-[28px] cursor-pointer w-[calc(100%-1rem)] items-center rounded-lg px-2 py-0 text-left text-sm leading-none text-app-black transition-colors hover:bg-surface-muted',
+        'app-control-height group mt-0 mx-2 flex w-[calc(100%-1rem)] cursor-pointer items-center rounded-lg px-2 py-0 text-left text-sm leading-none text-app-black transition-colors hover:bg-surface-muted [&_svg]:shrink-0 [&_svg]:text-para [&_svg]:transition-colors hover:[&_svg]:text-app-black',
         props.class,
       )
     "
