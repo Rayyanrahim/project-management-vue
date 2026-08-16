@@ -1,6 +1,7 @@
 import type { LucideIcon } from '@lucide/vue'
 import {
   House,
+  Inbox
 } from '@lucide/vue'
 
 export type AppRouteName = string
@@ -102,6 +103,7 @@ export const sidebarConfigs: SidebarConfigs = {
     title: 'Home',
     primaryNav: [
       { id: 'home', label: 'Home', icon: House, to: { name: 'Dashboard' } },
+      { id: 'inbox', label: 'Inbox', icon: Inbox, to: { name: 'Inbox' } },
     ],
   },
 }

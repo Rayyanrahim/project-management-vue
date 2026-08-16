@@ -7,11 +7,11 @@
         >
           <template #default="{ open }">
             <div class="flex h-4.5 w-4.5 items-center justify-center rounded-sm bg-sky-700 px-[6px] text-[12px] font-semibold text-white">
-              T
+              F
             </div>
             <div class="flex items-center gap-[6px]">
               <span class="hidden text-[13px] font-medium text-app-black lg:inline">
-                testing-15
+                Flixx Solutions
               </span>
               <ChevronDown class="h-3 w-3 text-para transition-transform hover:text-app-black" />
             </div>
@@ -20,7 +20,7 @@
 
         <DropdownContent class="w-72 max-w-[calc(100vw-1rem)]" align="start">
           <DropdownItem>
-            testing-15
+            Flixx Solutions
           </DropdownItem>
           <DropdownItem>
             K-labs
@@ -84,7 +84,7 @@
             </div>
 
             <div class="border-t border-[var(--color-border-default)] pt-2">
-              <DropdownSub>
+              <!-- <DropdownSub>
                 <DropdownSubTrigger
                   :icon="VolumeX"
                   :end-icon="ChevronRight"
@@ -101,8 +101,10 @@
                     <span>50 minutes</span>
                   </DropdownItem>
                 </DropdownSubContent>
-              </DropdownSub>
-
+              </DropdownSub> -->
+              <DropdownItem :icon="VolumeX">
+                <span>Mute notifications</span>
+              </DropdownItem>
               <DropdownItem :icon="Settings">
                 <span>Settings</span>
               </DropdownItem>

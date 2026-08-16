@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { nextTick } from 'vue'
 
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia } from 'pinia'
 import App from '../App.vue'
 import router from '../router'
@@ -17,6 +17,9 @@ describe('App', () => {
       },
     })
 
+    await flushPromises()
+    await nextTick()
+
     expect(wrapper.text()).toContain('Home')
     expect(wrapper.text()).toContain('Search')
   })
@@ -30,6 +33,9 @@ describe('App', () => {
         plugins: [createPinia(), router],
       },
     })
+
+    await flushPromises()
+    await nextTick()
 
     expect(wrapper.find('[data-testid="desktop-sidebar"]').exists()).toBe(true)
     expect(wrapper.get('[data-testid="desktop-sidebar"]').classes()).toContain('app-sidebar-desktop-open')
@@ -56,6 +62,9 @@ describe('App', () => {
       },
     })
 
+    await flushPromises()
+    await nextTick()
+
     expect(wrapper.get('[data-testid="mobile-sidebar"]').classes()).toContain('app-sidebar-mobile-closed')
 
     await wrapper.get('[aria-label="Open mobile sidebar"]').trigger('click')
@@ -67,27 +76,5 @@ describe('App', () => {
     await nextTick()
 
     expect(wrapper.get('[data-testid="mobile-sidebar"]').classes()).toContain('app-sidebar-mobile-closed')
-  })
-
-  it('opens the mute notifications submenu inside the profile dropdown', async () => {
-    await router.push('/')
-    await router.isReady()
-
-    const wrapper = mount(App, {
-      global: {
-        plugins: [createPinia(), router],
-      },
-    })
-
-    expect(wrapper.text()).not.toContain('30 minutes')
-
-    await wrapper.get('[aria-label="Open profile menu"]').trigger('click')
-    await nextTick()
-
-    await wrapper.get('[aria-label="Toggle mute notifications submenu"]').trigger('click')
-    await nextTick()
-
-    expect(wrapper.text()).toContain('30 minutes')
-    expect(wrapper.text()).toContain('50 minutes')
   })
 })
