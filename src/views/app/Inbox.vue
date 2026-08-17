@@ -92,8 +92,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Activity, CheckCheck, Clock3, Inbox as InboxIcon } from '@lucide/vue'
+import { useRoute, useRouter } from 'vue-router'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
 import { Tabs, TabsContent, TabsList, TabsSeparator, TabsTrigger } from '@/components/ui/tabs'
 
@@ -124,6 +125,47 @@ const inboxTabs = [
   },
 ] as const
 
+const route = useRoute()
+const router = useRouter()
 const inboxTabSize = 'md' as const
-const activeTab = ref<(typeof inboxTabs)[number]['id']>('primary')
+const inboxTabIds = inboxTabs.map((tab) => tab.id)
+
+function isInboxTab(tab: unknown): tab is (typeof inboxTabs)[number]['id'] {
+  return typeof tab === 'string' && inboxTabIds.includes(tab as (typeof inboxTabs)[number]['id'])
+}
+
+function getQueryTab() {
+  const tab = Array.isArray(route.query.tab) ? route.query.tab[0] : route.query.tab
+  return isInboxTab(tab) ? tab : undefined
+}
+
+const activeTab = ref<(typeof inboxTabs)[number]['id']>(getQueryTab() ?? 'primary')
+
+watch(
+  () => route.query.tab,
+  () => {
+    const queryTab = getQueryTab()
+
+    if (queryTab && queryTab !== activeTab.value) {
+      activeTab.value = queryTab
+    }
+  },
+)
+
+watch(
+  activeTab,
+  async (tab) => {
+    if (route.query.tab === tab) {
+      return
+    }
+
+    await router.replace({
+      query: {
+        ...route.query,
+        tab,
+      },
+    })
+  },
+  { immediate: true },
+)
 </script>
