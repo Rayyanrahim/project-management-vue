@@ -8,7 +8,7 @@
               :value="tab.id"
               :size="inboxTabSize"
               class="min-w-[250px]"
-              inner-class="mx-1"
+              inner-class="mx-1 bg-transparent font-medium text-app-black hover:bg-[#f3f3f3]"
             >
               <template #default="{ selected }">
                 <component

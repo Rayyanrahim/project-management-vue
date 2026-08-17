@@ -21,34 +21,34 @@ export const tabsListVariants = cva('inline-flex items-stretch', {
 
 export const tabsTriggerVariants = cva(
   [
-    'group relative inline-flex shrink-0 cursor-pointer items-center text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-default)] focus-visible:ring-offset-2',
+    'group relative inline-flex  shrink-0 cursor-pointer items-center text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-default)] focus-visible:ring-offset-2',
   ],
   {
     variants: {
       size: {
-        sm: 'min-h-11 py-2',
+        sm: 'min-h-8 py-1',
         md: 'min-h-14 py-3',
         lg: 'min-h-16 py-4',
       },
     },
     defaultVariants: {
-      size: 'md',
+      size: 'sm',
     },
   },
 )
 
 export const tabsTriggerInnerVariants = cva(
-  'flex w-full items-center gap-3 rounded-md px-3 py-2 transition-colors',
+  'flex w-full items-center rounded-md transition-colors',
   {
     variants: {
       size: {
-        sm: 'min-h-10',
-        md: 'min-h-13',
-        lg: 'min-h-16',
+        sm: ' justify-center gap-1.5 p-1 text-[12px]',
+        md: 'min-h-13 gap-3 px-3 py-2',
+        lg: 'min-h-16 gap-3 px-3 py-2',
       },
     },
     defaultVariants: {
-      size: 'md',
+      size: 'sm',
     },
   },
 )

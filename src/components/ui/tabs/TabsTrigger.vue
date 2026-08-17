@@ -20,7 +20,7 @@ const props = withDefaults(
     disabled?: boolean
   }>(),
   {
-    size: 'md',
+    size: 'sm',
     disabled: false,
   },
 )
@@ -106,7 +106,9 @@ onBeforeUnmount(() => {
       :class="
         cn(
           tabsTriggerInnerVariants({ size }),
-          selected ? 'bg-[#f3f3f3]' : 'bg-transparent hover:bg-[#f3f3f3]',
+          selected
+            ? 'bg-transparent font-semibold text-app-black'
+            : 'hover:bg-[#f3f3f3] font-medium text-para',
           props.innerClass,
         )
       "
