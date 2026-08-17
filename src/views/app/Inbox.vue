@@ -1,43 +1,93 @@
 <template>
   <div class="app-dashboard">
-    <AppPageHeader>
-      <div class="flex min-w-0 flex-1 overflow-x-auto px-1">
-        <button
-          v-for="tab in inboxTabs"
-          :key="tab.id"
-          type="button"
-          class="relative min-w-[250px] shrink-0 py-3 text-left before:absolute before:left-0 before:top-1/2 before:h-[calc(100%-24px)] before:w-px before:-translate-y-1/2 before:bg-border-default first:before:hidden"
-          @click="activeTab = tab.id"
-        >
-          <div
-            class="mx-1 flex min-h-[56px] items-center gap-3 rounded-md px-3 py-2 transition-colors"
-            :class="activeTab === tab.id ? 'bg-[#f3f3f3]' : 'bg-transparent hover:bg-[#f3f3f3]'"
-          >
-            <component :is="tab.icon" class="h-4 w-4 shrink-0 text-para" />
-
-            <div
-              class="min-w-0 flex min-h-[32px] flex-col"
-              :class="tab.meta ? 'justify-center' : 'justify-center'"
+    <Tabs v-model="activeTab">
+      <AppPageHeader>
+        <TabsList class="flex min-w-0 overflow-x-auto px-1">
+          <template v-for="(tab, index) in inboxTabs" :key="tab.id">
+            <TabsTrigger
+              :value="tab.id"
+              :size="inboxTabSize"
+              class="min-w-[250px]"
+              inner-class="mx-1"
             >
-              <div class="text-[14px] font-medium text-app-black">
-                {{ tab.label }}
-              </div>
-              <div
-                class="text-[12px] leading-4 text-para"
-                :class="tab.meta ? '' : 'invisible h-0 leading-none'"
-              >
-                {{ tab.meta || 'placeholder' }}
-              </div>
-            </div>
-          </div>
+              <template #default="{ selected }">
+                <component
+                  :is="tab.icon"
+                  class="h-4 w-4 shrink-0"
+                  :class="selected ? 'text-app-black' : 'text-para'"
+                />
 
-          <span
-            v-if="activeTab === tab.id"
-            class="absolute inset-x-1 bottom-0 h-0.5 bg-app-black"
-          />
-        </button>
+                <div class="min-w-0 flex min-h-[32px] flex-col justify-center">
+                  <div class="text-[14px] font-medium text-app-black">
+                    {{ tab.label }}
+                  </div>
+                  <div
+                    class="text-[12px] leading-4 text-para"
+                    :class="tab.meta ? '' : 'invisible h-0 leading-none'"
+                  >
+                    {{ tab.meta || 'placeholder' }}
+                  </div>
+                </div>
+              </template>
+            </TabsTrigger>
+
+            <TabsSeparator
+              v-if="index < inboxTabs.length - 1"
+              inline
+              :size="inboxTabSize"
+              class="my-auto self-auto bg-[#e6e9ee]"
+            />
+          </template>
+        </TabsList>
+      </AppPageHeader>
+
+      <div class="px-4 py-5">
+        <TabsContent value="primary">
+          <section
+            class="rounded-xl border border-border-default bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+          >
+            <div class="text-sm font-semibold text-app-black">Primary feed</div>
+            <p class="mt-2 text-sm text-para">
+              This panel is for the main inbox stream. Switch the top tabs and this content changes.
+            </p>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="other">
+          <section
+            class="rounded-xl border border-border-default bg-[#fcfcfc] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+          >
+            <div class="text-sm font-semibold text-app-black">Other feed</div>
+            <p class="mt-2 text-sm text-para">
+              This panel shows the secondary queue so you can clearly see the selected tab is
+              working.
+            </p>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="later">
+          <section
+            class="rounded-xl border border-border-default bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+          >
+            <div class="text-sm font-semibold text-app-black">Later feed</div>
+            <p class="mt-2 text-sm text-para">
+              This panel is for items you want to come back to later.
+            </p>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="cleared">
+          <section
+            class="rounded-xl border border-border-default bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+          >
+            <div class="text-sm font-semibold text-app-black">Cleared feed</div>
+            <p class="mt-2 text-sm text-para">
+              This panel holds completed or cleared items, separate from the active inbox.
+            </p>
+          </section>
+        </TabsContent>
       </div>
-    </AppPageHeader>
+    </Tabs>
   </div>
 </template>
 
@@ -45,6 +95,7 @@
 import { ref } from 'vue'
 import { Activity, CheckCheck, Clock3, Inbox as InboxIcon } from '@lucide/vue'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
+import { Tabs, TabsContent, TabsList, TabsSeparator, TabsTrigger } from '@/components/ui/tabs'
 
 const inboxTabs = [
   {
@@ -73,5 +124,6 @@ const inboxTabs = [
   },
 ] as const
 
+const inboxTabSize = 'md' as const
 const activeTab = ref<(typeof inboxTabs)[number]['id']>('primary')
 </script>
