@@ -84,42 +84,24 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <button
-    :id="ids.triggerId"
-    ref="triggerRef"
-    type="button"
-    role="tab"
-    :disabled="disabled"
-    :tabindex="selected ? 0 : -1"
-    :aria-selected="selected"
-    :aria-controls="ids.contentId"
-    :data-state="selected ? 'active' : 'inactive'"
-    :data-value="value"
-    :data-separated="list.separated.value ? 'true' : undefined"
-    :class="cn(tabsTriggerVariants({ size }), props.class)"
-    @click="activate"
-    @keydown="onKeydown"
-  >
+  <button :id="ids.triggerId" ref="triggerRef" type="button" role="tab" :disabled="disabled"
+    :tabindex="selected ? 0 : -1" :aria-selected="selected" :aria-controls="ids.contentId"
+    :data-state="selected ? 'active' : 'inactive'" :data-value="value"
+    :data-separated="list.separated.value ? 'true' : undefined" :class="cn(tabsTriggerVariants({ size }), props.class)"
+    @keydown="onKeydown">
     <TabsSeparator v-if="showSeparator" :size="size" />
 
-    <div
-      :class="
-        cn(
-          tabsTriggerInnerVariants({ size }),
-          selected
-            ? 'bg-transparent font-semibold text-app-black'
-            : 'hover:bg-[#f3f3f3] font-medium text-para',
-          props.innerClass,
-        )
-      "
-    >
+    <div @click="activate" :class="cn(
+      tabsTriggerInnerVariants({ size }),
+      selected
+        ? 'bg-transparent font-semibold text-app-black'
+        : 'hover:bg-[#f3f3f3] font-medium text-para',
+      props.innerClass,
+    )
+      ">
       <slot :selected="selected" />
     </div>
 
-    <span
-      v-if="selected"
-      aria-hidden="true"
-      class="absolute inset-x-1 bottom-0 h-0.5 rounded-full bg-app-black"
-    />
+    <span v-if="selected" aria-hidden="true" class="absolute inset-x-1 bottom-0 h-0.5 rounded-full bg-app-black" />
   </button>
 </template>

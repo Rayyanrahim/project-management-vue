@@ -21,7 +21,7 @@ export const tabsListVariants = cva('inline-flex items-stretch', {
 
 export const tabsTriggerVariants = cva(
   [
-    'group relative inline-flex  shrink-0 cursor-pointer items-center text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-default)] focus-visible:ring-offset-2',
+    'group relative inline-flex  shrink-0 items-center text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-default)] focus-visible:ring-offset-2',
   ],
   {
     variants: {
@@ -38,7 +38,7 @@ export const tabsTriggerVariants = cva(
 )
 
 export const tabsTriggerInnerVariants = cva(
-  'flex w-full items-center rounded-md transition-colors',
+  'flex w-full items-center rounded-md cursor-pointer transition-colors',
   {
     variants: {
       size: {
