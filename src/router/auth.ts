@@ -6,6 +6,7 @@ const LoginRecover = () => import('@/views/auth/LoginRecover.vue')
 const Signup = () => import('@/views/auth/Signup.vue')
 const ForgotPassword = () => import('@/views/auth/ForgotPassword.vue')
 const VerifyEmail = () => import('@/views/auth/VerifyEmail.vue')
+const ConfirmPassword = () => import('@/views/auth/ConfirmPassword.vue')
 
 export const authRoutes: RouteRecordRaw[] = [
   {
@@ -54,6 +55,17 @@ export const authRoutes: RouteRecordRaw[] = [
         path: '',
         name: 'VerifyEmail',
         component: VerifyEmail,
+      },
+    ],
+  },
+  {
+    path: '/confirm-password',
+    component: AuthLayout,
+    children: [
+      {
+        path: '',
+        name: 'ConfirmPassword',
+        component: ConfirmPassword,
       },
     ],
   },

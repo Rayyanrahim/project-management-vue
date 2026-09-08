@@ -4,10 +4,10 @@
       <img :src="logoIcon" alt="" class="h-9 w-9" />
     </div>
     <h2 class="mt-4 text-center text-xl font-semibold tracking-tight text-gray-900">{{ title }}</h2>
-    <p v-if="prompt && to && linkText" class="mt-1 text-center text-sm/6 text-gray-500">
+    <p v-if="prompt || to || linkText" class="mt-1 text-center text-sm/6 text-gray-500">
       {{ prompt }}
       {{ ' ' }}
-      <RouterLink :to="to" class="auth-link">{{ linkText }}</RouterLink>
+      <RouterLink v-if="to" :to="to" class="auth-link">{{ linkText }}</RouterLink>
     </p>
   </div>
 </template>
