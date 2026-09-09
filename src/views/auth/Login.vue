@@ -22,22 +22,31 @@
 
     <form class="mt-4 space-y-3" @submit.prevent="onSubmit">
       <div>
-        <Input id="email" v-model="formData.email" type="email" name="email" autocomplete="email" placeholder="Work email"
-          :class="emailError ? 'outline-red-400 focus:outline-red-400' : undefined" />
-        <p v-if="emailError" class="mt-1.5 text-sm text-red-400">Email required</p>
+        <Input id="email" v-model="formData.email" type="email" name="email" autocomplete="email"
+          placeholder="Work email" :aria-invalid="Boolean(errors.email)"
+          :class="errors.email ? 'outline-red-400 focus:outline-red-400' : undefined" @blur="touch('email')"
+          @input="revalidate('email')" />
+        <FormError :message="errors.email" />
       </div>
 
-      <div class="relative">
-        <Input id="password" v-model="formData.password" :type="showPassword ? 'text' : 'password'" name="password"
-          autocomplete="current-password" placeholder="Password" class="pr-10" />
-        <button type="button" class="absolute inset-y-0 right-0 flex items-center px-3 hover:opacity-80"
-          :aria-label="showPassword ? 'Hide password' : 'Show password'" @click="showPassword = !showPassword">
-          <img :src="showPassword ? eyeOffIcon : eyeIcon" alt="" class="size-5" />
-        </button>
+      <div>
+        <div class="relative">
+          <Input id="password" v-model="formData.password" :type="showPassword ? 'text' : 'password'" name="password"
+            autocomplete="current-password" placeholder="Password" :aria-invalid="Boolean(errors.password)"
+            :class="['pr-10', errors.password ? 'outline-red-400 focus:outline-red-400' : undefined]"
+            @blur="touch('password')" @input="revalidate('password')" />
+          <button type="button" class="absolute inset-y-0 right-0 flex items-center px-3 hover:opacity-80"
+            :aria-label="showPassword ? 'Hide password' : 'Show password'" @click="showPassword = !showPassword">
+            <img :src="showPassword ? eyeOffIcon : eyeIcon" alt="" class="size-5" />
+          </button>
+        </div>
+        <FormError :message="errors.password" />
       </div>
 
-      <Button type="submit" size="lg" class="w-full" :disabled="!isFormValid" :loading="submitting">
-        <img v-if="submitting" :src="spinnerIcon" alt="" class="size-5 animate-spin" />
+      <FormError :message="loginError" />
+
+      <Button type="submit" size="lg" class="w-full" :disabled="!isFormValid || loading" :loading="loading">
+        <img v-if="loading" :src="spinnerIcon" alt="" class="size-5 animate-spin" />
         <template v-else>Log In</template>
       </Button>
     </form>
@@ -54,10 +63,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+<script setup>
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FormError } from '@/components/ui/form'
 import { Separator } from '@/components/ui/separator'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import githubIcon from '@/assets/svg/github.svg'
@@ -65,22 +77,49 @@ import googleIcon from '@/assets/svg/google.svg'
 import eyeIcon from '@/assets/svg/eye.svg'
 import eyeOffIcon from '@/assets/svg/eye-off.svg'
 import spinnerIcon from '@/assets/svg/spinner.svg'
+import { ApiError } from '@/api/http'
+import { useZodForm } from '@/composables/useZodForm'
+import { loginSchema } from '@/schemas/auth'
+import { useAuthStore } from '@/stores/auth'
 
-const formData = reactive({
+const router = useRouter()
+const authStore = useAuthStore()
+const { loading } = storeToRefs(authStore)
+const loginError = ref('')
+const showPassword = ref(false)
+
+const {
+  values: formData,
+  errors,
+  validatedData,
+  isValid: isFormValid,
+  validate,
+  touch,
+  revalidate,
+  setErrors,
+} = useZodForm(loginSchema, {
   email: '',
   password: '',
 })
-const showPassword = ref(false)
-const submitted = ref(false)
-const submitting = ref(false)
 
-const emailError = computed(() => submitted.value && !formData.email.trim())
-const isFormValid = computed(() => Boolean(formData.email.trim() && formData.password.trim()))
+const onSubmit = async () => {
+  if (!isFormValid.value || loading.value || !validate()) return
 
-async function onSubmit() {
-  submitted.value = true
-  if (!isFormValid.value || submitting.value) return
-  submitting.value = true
-  // Auth submit will be wired up later.
+  loginError.value = ''
+
+  try {
+    await authStore.login(validatedData.value)
+    await router.push({ name: 'Dashboard' })
+  } catch (error) {
+    const isValidationError = error instanceof ApiError
+      && error.messageCode === 'VALIDATION_ERROR'
+      && error.errors
+
+    if (isValidationError && setErrors(error.errors)) return
+
+    loginError.value = error instanceof ApiError
+      ? error.message
+      : 'Unable to log in. Please try again.'
+  }
 }
 </script>
