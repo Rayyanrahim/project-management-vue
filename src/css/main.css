@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "./auth.css";
-@import "./app.css";
+@import 'tailwindcss';
+@import './auth.css';
+@import './app.css';
 
 @theme {
   --color-primary: #a952ff;
@@ -15,12 +15,12 @@
   --color-primary-login: #202020;
   --color-primary-login-hover: #363636;
 
-  --color-para : #646464;
+  --color-para: #646464;
 
   --color-auth-link: #0b68cb;
   --color-auth-link-hover: #0957ab;
   --color-auth-disabled: #bbbbbb;
-  --color-sidebar-bg: #F9F9F9;
+  --color-sidebar-bg: #f9f9f9;
   --app-control-height: 28px;
 }
 
@@ -133,4 +133,29 @@
 .sheet-content-leave-from {
   opacity: 1;
   transform: translateX(0);
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(12px) scale(0.97);
+}
+
+.toast-move {
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-enter-active,
+  .toast-leave-active,
+  .toast-move {
+    transition: none;
+  }
 }

@@ -12,6 +12,7 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: '/login',
     component: AuthLayout,
+    meta: { guestOnly: true },
     children: [
       {
         path: '',
@@ -28,6 +29,7 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: '/signup',
     component: AuthLayout,
+    meta: { guestOnly: true },
     children: [
       {
         path: '',
@@ -39,6 +41,7 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: '/forgot-password',
     component: AuthLayout,
+    meta: { guestOnly: true },
     children: [
       {
         path: '',
@@ -50,6 +53,7 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: '/verify-email',
     component: AuthLayout,
+    meta: { requiresAuth: true, allowUnverified: true },
     children: [
       {
         path: '',
@@ -61,6 +65,7 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: '/confirm-password',
     component: AuthLayout,
+    meta: { guestOnly: true },
     children: [
       {
         path: '',

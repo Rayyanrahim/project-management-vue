@@ -10,6 +10,7 @@ export async function registerApi(payload) {
 
 export async function loginApi(credentials) {
   const response = await http.post('auth/login', credentials)
+  console.log('loginApi response:', response)
   return unwrapResponse(response)
 }
 
@@ -22,6 +23,11 @@ export async function refreshSessionApi() {
   const response = await http.post('auth/refresh', undefined, {
     skipAuthRefresh: true,
   })
+  return unwrapResponse(response)
+}
+
+export async function getMeApi() {
+  const response = await http.get('auth/me')
   return unwrapResponse(response)
 }
 

@@ -7,11 +7,11 @@
         >
           <template #default="{ open }">
             <div class="flex h-4.5 w-4.5 items-center justify-center rounded-sm bg-sky-700 px-[6px] text-[12px] font-semibold text-white">
-              F
+              {{ workspaceInitial }}
             </div>
             <div class="flex items-center gap-[6px]">
               <span class="hidden text-[13px] font-medium text-app-black lg:inline">
-                Flixx Solutions
+                {{ workspaceName }}
               </span>
               <ChevronDown class="h-3 w-3 text-para transition-transform hover:text-app-black" />
             </div>
@@ -19,13 +19,10 @@
         </DropdownTrigger>
 
         <DropdownContent class="w-72 max-w-[calc(100vw-1rem)]" align="start">
-          <DropdownItem>
-            Flixx Solutions
+          <DropdownItem v-for="membership in workspaceMemberships" :key="membership.workspace.id">
+            {{ membership.workspace.name }}
           </DropdownItem>
-          <DropdownItem>
-            K-labs
-          </DropdownItem>
-          <DropdownItem>
+          <DropdownItem disabled>
             Create workspace
           </DropdownItem>
         </DropdownContent>
@@ -52,7 +49,7 @@
         >
           <template #default="{ open }">
             <div class="relative flex h-6 w-6 items-center justify-center rounded-full bg-violet-600 text-[10px] font-semibold text-white">
-              R
+              {{ profileInitial }}
               
                 <span class="absolute -bottom-0.5 -right-0.5 h-[11px] w-[11px] rounded-sm border-2 border-white bg-emerald-500" />
             </div>
@@ -68,13 +65,13 @@
             <div class="px-3 pb-3 pt-1">
               <div class="flex items-start gap-2.5">
                 <div class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-600 text-sm font-semibold text-white">
-                  R
+                  {{ profileInitial }}
                   <span class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-sm border-2 border-white bg-emerald-500" />
                 </div>
 
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center text-app-black">
-                    <span class="truncate text-[13px] font-medium">rayyan.klabs@gmail.com</span>
+                    <span class="truncate text-[13px] font-medium">{{ userEmail }}</span>
                   </div>
                   <div class="flex items-center leading-3 text-[12px] text-para">
                     <span>Online</span>
@@ -111,8 +108,12 @@
               <DropdownItem :icon="Bell">
                 <span>Notifications</span>
               </DropdownItem>
-              <DropdownItem :icon="CircleArrowRight">
-                <span>Logout</span>
+              <DropdownItem
+                :icon="CircleArrowRight"
+                :disabled="loggingOut"
+                @select="onLogout"
+              >
+                <span>{{ loggingOut ? 'Logging out…' : 'Logout' }}</span>
               </DropdownItem>
             </div>
           </div>
@@ -123,7 +124,42 @@
 </template>
 
 <script setup lang="ts">
-import { Bell, VolumeX, ChevronDown, ChevronRight, CircleArrowRight , Search, Settings } from '@lucide/vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Bell, VolumeX, ChevronDown, CircleArrowRight, Search, Settings } from '@lucide/vue'
+import { useAuthStore } from '@/stores/auth'
+import { toast } from '@/components/ui/toast'
 import { Button } from '@/components/ui/button'
-import { Dropdown, DropdownContent, DropdownItem, DropdownSub, DropdownSubContent, DropdownSubTrigger, DropdownTrigger } from '@/components/ui/dropdown'
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@/components/ui/dropdown'
+
+const router = useRouter()
+const authStore = useAuthStore()
+const loggingOut = ref(false)
+
+const workspaceMemberships = computed(() => authStore.user?.workspaceMemberships ?? [])
+const workspaceName = computed(
+  () => workspaceMemberships.value[0]?.workspace?.name || 'Workspace',
+)
+const workspaceInitial = computed(() => workspaceName.value.charAt(0).toUpperCase() || 'W')
+const userEmail = computed(() => authStore.user?.email || 'Signed in')
+const profileInitial = computed(() => {
+  const source = authStore.user?.name || authStore.user?.email || 'User'
+  return source.charAt(0).toUpperCase()
+})
+
+async function onLogout() {
+  if (loggingOut.value) return
+  loggingOut.value = true
+
+  try {
+    await authStore.logout()
+  } catch {
+    toast.info('You have been signed out locally.', {
+      description: 'The server session could not be reached.',
+    })
+  } finally {
+    loggingOut.value = false
+    await router.replace({ name: 'Login' })
+  }
+}
 </script>

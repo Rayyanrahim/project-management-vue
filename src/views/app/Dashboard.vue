@@ -38,9 +38,20 @@
           <h2 class="text-[18px] font-semibold text-app-black">You're all caught up!</h2>
           <p class="mt-1 text-sm text-para">Looks like you don't have any unread replies</p>
 
-          <Button variant="app-outline" class="mt-5 font-medium text-para" @click="activeTab = 'read'">
+          <Button
+            variant="app-outline"
+            class="mt-5 font-medium text-para"
+            @click="activeTab = 'read'"
+          >
             Read old replies
           </Button>
+
+          <div class="mt-6 flex flex-wrap justify-center gap-2" aria-label="Toast examples">
+            <Button size="md" @click="showSuccessToast">Success toast</Button>
+            <Button variant="app-outline" size="md" @click="showErrorToast">Error toast</Button>
+            <Button variant="app-outline" size="md" @click="showWarningToast">Warning toast</Button>
+            <Button variant="app-outline" size="md" @click="showInfoToast">Info toast</Button>
+          </div>
         </TabsContent>
 
         <TabsContent value="read" class="flex w-full flex-col items-center text-center">
@@ -58,6 +69,30 @@ import { Check, User } from '@lucide/vue'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { toast } from '@/components/ui/toast'
 
 const activeTab = ref<'unread' | 'read'>('unread')
+
+function showSuccessToast() {
+  toast.success('Task created', {
+    description: 'Website redesign was added to your workspace.',
+    action: { label: 'View', onClick: () => undefined },
+  })
+}
+
+function showErrorToast() {
+  toast.error('Could not upload attachment', {
+    description: 'Check your connection and try again.',
+  })
+}
+
+function showWarningToast() {
+  toast.warning('Due date is approaching', {
+    description: 'This task is due tomorrow at 5:00 PM.',
+  })
+}
+
+function showInfoToast() {
+  toast.info('Changes saved automatically')
+}
 </script>

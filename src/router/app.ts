@@ -7,6 +7,7 @@ export const appRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     component: AppLayout,
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',

@@ -2,6 +2,7 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import {
   forgotPasswordApi,
+  getMeApi,
   loginApi,
   logoutApi,
   refreshSessionApi,
@@ -10,44 +11,9 @@ import {
   verifyOtpApi,
 } from '@/api/auth'
 
-const PROFILE_KEY = 'project-management.auth-profile'
-
-const readStoredProfile = () => {
-  try {
-    const value = localStorage.getItem(PROFILE_KEY)
-    if (!value) return null
-
-    const profile = JSON.parse(value)
-    return profile && typeof profile === 'object' && !Array.isArray(profile) ? profile : null
-  } catch {
-    return null
-  }
-}
-
-const writeStoredProfile = (profile) => {
-  try {
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile))
-  } catch {
-    // Storage is a display cache only; cookie authentication must keep working without it.
-  }
-}
-
-const removeStoredProfile = () => {
-  try {
-    localStorage.removeItem(PROFILE_KEY)
-  } catch {
-    // Storage is optional.
-  }
-}
-
-const splitAuthPayload = (payload = {}) => {
-  const { verification, ...user } = payload
-  return { user, verification }
-}
-
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
-  const sessionStatus = ref('unknown')
+  const sessionStatus = ref('')
   const loadingAction = ref(null)
   let initializePromise = null
 
@@ -57,68 +23,88 @@ export const useAuthStore = defineStore('auth', () => {
     () => isAuthenticated.value && Boolean(user.value?.emailVerifiedAt),
   )
 
-  const applyAuthenticatedProfile = (profile) => {
-    user.value = profile
-    sessionStatus.value = 'authenticated'
-    writeStoredProfile(profile)
-  }
-
-  const applyAuthPayload = (payload) => {
-    const result = splitAuthPayload(payload)
-    applyAuthenticatedProfile(result.user)
-    return result
-  }
-
-  const runAction = async (name, action) => {
-    loadingAction.value = name
+  const login = async (credentials) => {
+    loadingAction.value = 'login'
 
     try {
-      return await action()
+      const { verification, ...userProfile } = await loginApi(credentials)
+      user.value = userProfile
+      sessionStatus.value = 'authenticated'
+      return { user: userProfile, verification }
     } finally {
       loadingAction.value = null
     }
   }
 
-  const login = async (credentials) => {
-    return runAction('login', async () => applyAuthPayload(await loginApi(credentials)))
-  }
-
   const register = async (payload) => {
-    return runAction('register', async () => applyAuthPayload(await registerApi(payload)))
+    loadingAction.value = 'register'
+
+    try {
+      const { verification, ...userProfile } = await registerApi(payload)
+      user.value = userProfile
+      sessionStatus.value = 'authenticated'
+      return { user: userProfile, verification }
+    } finally {
+      loadingAction.value = null
+    }
   }
 
   const verifyOtp = async (payload) => {
-    return runAction('verifyOtp', async () => applyAuthPayload(await verifyOtpApi(payload)))
+    loadingAction.value = 'verifyOtp'
+
+    try {
+      const { verification, ...userProfile } = await verifyOtpApi(payload)
+      user.value = userProfile
+      sessionStatus.value = 'authenticated'
+      return { user: userProfile, verification }
+    } finally {
+      loadingAction.value = null
+    }
   }
 
   const forgotPassword = async (payload) => {
-    return runAction('forgotPassword', () => forgotPasswordApi(payload))
+    loadingAction.value = 'forgotPassword'
+
+    try {
+      return await forgotPasswordApi(payload)
+    } finally {
+      loadingAction.value = null
+    }
   }
 
   const resetPassword = async (payload) => {
-    return runAction('resetPassword', () => resetPasswordApi(payload))
+    loadingAction.value = 'resetPassword'
+
+    try {
+      return await resetPasswordApi(payload)
+    } finally {
+      loadingAction.value = null
+    }
   }
 
   const refreshSession = async () => {
     const response = await refreshSessionApi()
-    const cachedProfile = user.value ?? readStoredProfile()
-
-    user.value = cachedProfile
     sessionStatus.value = 'authenticated'
     return response
+  }
+
+  const getMe = async () => {
+    const currentUser = await getMeApi()
+    user.value = currentUser
+    sessionStatus.value = 'authenticated'
+    return currentUser
   }
 
   const clearAuth = () => {
     user.value = null
     sessionStatus.value = 'guest'
-    removeStoredProfile()
   }
 
   const initialize = () => {
     if (!initializePromise) {
       initializePromise = (async () => {
         try {
-          await refreshSession()
+          await getMe()
         } catch {
           clearAuth()
         }
@@ -129,13 +115,14 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-    return runAction('logout', async () => {
-      try {
-        return await logoutApi()
-      } finally {
-        clearAuth()
-      }
-    })
+    loadingAction.value = 'logout'
+
+    try {
+      return await logoutApi()
+    } finally {
+      clearAuth()
+      loadingAction.value = null
+    }
   }
 
   return {
@@ -152,6 +139,7 @@ export const useAuthStore = defineStore('auth', () => {
     forgotPassword,
     resetPassword,
     refreshSession,
+    getMe,
     logout,
     clearAuth,
   }

@@ -29,6 +29,20 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 npm install
 ```
 
+### Backend API
+
+Create a local `.env` file with the backend API prefix:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000/api/v1/
+```
+
+Run `project-management-backend` on port `3000`. Its CORS origin must match the Vue
+development origin (`http://localhost:5173`) and allow credentials. Use the same hostname
+for both applications—do not mix `localhost` and `127.0.0.1`—so the HTTP-only auth cookies
+are sent consistently. Serve both applications over HTTPS in production when secure cookies
+are enabled.
+
 ### Compile and Hot-Reload for Development
 
 ```sh
