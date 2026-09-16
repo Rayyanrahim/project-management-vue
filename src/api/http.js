@@ -15,9 +15,11 @@ export class ApiError extends Error {
 }
 
 let authHandlers = {}
+let refreshPromise = null
 
-export const configureHttpAuth = (handlers) => {
+export const configureHttpAuth = (handlers = {}) => {
   authHandlers = handlers
+  refreshPromise = null
 }
 
 const isValidationErrors = (value) => {
@@ -78,20 +80,6 @@ export const createHttpClient = (config = {}) => {
     ...config,
   })
 
-  client.interceptors.request.use(async (request) => {
-    const hasAuthorizationHeader = Boolean(request.headers.get('Authorization'))
-
-    if (!hasAuthorizationHeader) {
-      const accessToken = await authHandlers.getAccessToken?.()
-
-      if (accessToken) {
-        request.headers.set('Authorization', `Bearer ${accessToken}`)
-      }
-    }
-
-    return request
-  })
-
   client.interceptors.response.use(
     (response) => {
       if (isResponseBody(response.data) && response.data.status === 'error') {
@@ -102,8 +90,34 @@ export const createHttpClient = (config = {}) => {
     },
     async (error) => {
       const apiError = toApiError(error)
+      const request = error?.config
+      const canRefresh =
+        apiError.httpStatus === 401 &&
+        request &&
+        !request.skipAuthRefresh &&
+        !request._authRetry &&
+        typeof authHandlers.refresh === 'function'
 
-      if (apiError.httpStatus === 401) {
+      if (canRefresh) {
+        request._authRetry = true
+
+        try {
+          if (!refreshPromise) {
+            refreshPromise = Promise.resolve(authHandlers.refresh()).catch(async (refreshError) => {
+              const normalizedRefreshError = toApiError(refreshError)
+              await authHandlers.onUnauthorized?.(normalizedRefreshError)
+              throw normalizedRefreshError
+            })
+          }
+
+          await refreshPromise
+          return client.request(request)
+        } finally {
+          refreshPromise = null
+        }
+      }
+
+      if (apiError.httpStatus === 401 && request?._authRetry) {
         await authHandlers.onUnauthorized?.(apiError)
       }
 
