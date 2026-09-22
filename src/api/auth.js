@@ -3,45 +3,50 @@ import { http } from './http'
 const unwrapResponse = (response) =>
   Object.prototype.hasOwnProperty.call(response.data, 'data') ? response.data.data : response.data
 
-export async function registerApi(payload) {
+export const registerApi = async (payload) => {
   const response = await http.post('auth/register', payload)
   return unwrapResponse(response)
 }
 
-export async function loginApi(credentials) {
+export const loginApi = async (credentials) => {
   const response = await http.post('auth/login', credentials)
   console.log('loginApi response:', response)
   return unwrapResponse(response)
 }
 
-export async function verifyOtpApi(payload) {
+export const verifyOtpApi = async (payload) => {
   const response = await http.post('auth/verify-otp', payload)
   return unwrapResponse(response)
 }
 
-export async function refreshSessionApi() {
+export const refreshSessionApi = async () => {
   const response = await http.post('auth/refresh', undefined, {
     skipAuthRefresh: true,
   })
   return unwrapResponse(response)
 }
 
-export async function getMeApi() {
+export const getMeApi = async () => {
   const response = await http.get('auth/me')
   return unwrapResponse(response)
 }
 
-export async function logoutApi() {
+export const logoutApi = async () => {
   const response = await http.post('auth/logout')
   return unwrapResponse(response)
 }
 
-export async function forgotPasswordApi(payload) {
+export const forgotPasswordApi = async (payload) => {
   const response = await http.post('auth/forgot-password', payload)
   return unwrapResponse(response)
 }
 
-export async function resetPasswordApi(payload) {
+export const validatePasswordResetTokenApi = async (token) => {
+  const response = await http.get(`auth/reset-password/${encodeURIComponent(token)}`)
+  return unwrapResponse(response)
+}
+
+export const resetPasswordApi = async (payload) => {
   const response = await http.post('auth/reset-password', payload)
   return unwrapResponse(response)
 }

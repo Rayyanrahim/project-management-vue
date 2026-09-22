@@ -63,6 +63,18 @@ export const authRoutes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/reset-password/:token',
+    component: AuthLayout,
+    meta: { guestOnly: true },
+    children: [
+      {
+        path: '',
+        name: 'PasswordReset',
+        component: ConfirmPassword,
+      },
+    ],
+  },
+  {
     path: '/confirm-password',
     component: AuthLayout,
     meta: { guestOnly: true },

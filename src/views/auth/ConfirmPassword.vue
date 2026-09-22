@@ -6,7 +6,13 @@
 
   <div class="auth-panel">
     <form class="space-y-4" @submit.prevent="onSubmit">
-      <FormError v-if="invalidToken" message="This password reset link is invalid or incomplete." />
+      <p v-if="validatingToken" class="text-center text-sm/6 text-gray-500" role="status">
+        Validating reset link...
+      </p>
+      <FormError
+        v-else-if="invalidToken"
+        message="This password reset link is invalid or expired."
+      />
 
       <div>
         <div class="relative">
@@ -18,6 +24,7 @@
             autocomplete="new-password"
             placeholder="Password"
             class="pr-10"
+            :disabled="!tokenValidated"
             :aria-invalid="Boolean(errors.password)"
             @blur="touch('password')"
             @input="revalidate('password')"
@@ -44,6 +51,7 @@
             autocomplete="new-password"
             placeholder="Confirm Password"
             class="pr-10"
+            :disabled="!tokenValidated"
             :aria-invalid="Boolean(errors.confirmPassword)"
             @blur="touch('confirmPassword')"
             @input="revalidate('confirmPassword')"
@@ -66,7 +74,7 @@
         type="submit"
         size="lg"
         class="w-full"
-        :disabled="!isFormValid || loading || invalidToken"
+        :disabled="!isFormValid || loading || !tokenValidated"
         :loading="loading"
       >
         <img v-if="loading" :src="spinnerIcon" alt="" class="size-5 animate-spin" />
@@ -83,7 +91,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { ApiError } from '@/api/http'
@@ -106,8 +114,14 @@ const { loading } = storeToRefs(authStore)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const submitError = ref('')
-const token = typeof route.query.token === 'string' ? route.query.token : ''
-const invalidToken = computed(() => !/^[a-f0-9]{64}$/i.test(token))
+const routeToken = typeof route.params?.token === 'string' ? route.params.token : ''
+const queryToken = typeof route.query.token === 'string' ? route.query.token : ''
+const token = routeToken || queryToken
+const tokenHasValidFormat = /^[a-f0-9]{64}$/i.test(token)
+const tokenValidationState = ref(tokenHasValidFormat ? 'checking' : 'invalid')
+const validatingToken = computed(() => tokenValidationState.value === 'checking')
+const tokenValidated = computed(() => tokenValidationState.value === 'valid')
+const invalidToken = computed(() => tokenValidationState.value === 'invalid')
 
 const {
   values: formData,
@@ -124,8 +138,19 @@ const {
   confirmPassword: '',
 })
 
+onMounted(async () => {
+  if (!tokenHasValidFormat) return
+
+  try {
+    await authStore.validatePasswordResetToken(token)
+    tokenValidationState.value = 'valid'
+  } catch {
+    tokenValidationState.value = 'invalid'
+  }
+})
+
 async function onSubmit() {
-  if (invalidToken.value || !isFormValid.value || loading.value || !validate()) return
+  if (!tokenValidated.value || !isFormValid.value || loading.value || !validate()) return
   submitError.value = ''
 
   try {

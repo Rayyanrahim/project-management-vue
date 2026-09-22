@@ -8,6 +8,7 @@ import {
   refreshSessionApi,
   registerApi,
   resetPasswordApi,
+  validatePasswordResetTokenApi,
   verifyOtpApi,
 } from '@/api/auth'
 
@@ -15,13 +16,12 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const sessionStatus = ref('')
   const loadingAction = ref(null)
+  const passwordResetEmail = ref('')
   let initializePromise = null
 
   const loading = computed(() => loadingAction.value !== null)
   const isAuthenticated = computed(() => sessionStatus.value === 'authenticated')
-  const isVerified = computed(
-    () => isAuthenticated.value && Boolean(user.value?.emailVerifiedAt),
-  )
+  const isVerified = computed(() => isAuthenticated.value && Boolean(user.value?.emailVerifiedAt))
 
   const login = async (credentials) => {
     loadingAction.value = 'login'
@@ -66,7 +66,9 @@ export const useAuthStore = defineStore('auth', () => {
     loadingAction.value = 'forgotPassword'
 
     try {
-      return await forgotPasswordApi(payload)
+      const result = await forgotPasswordApi(payload)
+      passwordResetEmail.value = payload.email
+      return result
     } finally {
       loadingAction.value = null
     }
@@ -77,6 +79,16 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       return await resetPasswordApi(payload)
+    } finally {
+      loadingAction.value = null
+    }
+  }
+
+  const validatePasswordResetToken = async (token) => {
+    loadingAction.value = 'validatePasswordResetToken'
+
+    try {
+      return await validatePasswordResetTokenApi(token)
     } finally {
       loadingAction.value = null
     }
@@ -129,6 +141,7 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     sessionStatus,
     loadingAction,
+    passwordResetEmail,
     loading,
     isAuthenticated,
     isVerified,
@@ -137,6 +150,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     verifyOtp,
     forgotPassword,
+    validatePasswordResetToken,
     resetPassword,
     refreshSession,
     getMe,

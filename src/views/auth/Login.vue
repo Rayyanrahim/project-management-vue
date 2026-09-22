@@ -156,10 +156,6 @@ const onSubmit = async () => {
     const isValidationError =
       error instanceof ApiError && error.messageCode === 'VALIDATION_ERROR' && error.errors
     if (isValidationError && setErrors(error.errors)) {
-      toast.error('Validation error', {
-        description: error.message?.trim() || 'Please check the highlighted fields.',
-        position: 'top-right',
-      })
       return
     }
     toast.error(error.message?.trim() || 'Unable to log in. Please try again.',{
