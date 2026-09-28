@@ -22,6 +22,45 @@
   --color-auth-disabled: #bbbbbb;
   --color-sidebar-bg: #f9f9f9;
   --app-control-height: 28px;
+
+  /* Table */
+  --color-table-border: #f0f0f0;
+  --color-table-head: #6b6b6b;
+  --color-table-muted: #8c8c8c;
+  --color-table-hover: #fafafa;
+  --color-table-head-hover: #ececec;
+  --color-table-sort: #7c5cff;
+  --color-table-sort-bg: #ece8ff;
+  --color-table-title: #2e2e2e;
+  --color-table-icon: #b5b5b5;
+  --color-table-control: #e0e0e0;
+  --color-table-control-hover: #f5f5f5;
+  --color-surface-hover: #f3f3f3;
+
+  /* Status */
+  --color-success: #008844;
+  --color-danger: #c62828;
+
+  /* Priority */
+  --color-priority-urgent: #e5484d;
+  --color-priority-high: #f5a524;
+  --color-priority-normal: #4f8cff;
+  --color-priority-low: #9ca3af;
+  --color-priority-none: #cfcfcf;
+
+  /* Tags */
+  --color-tag-magenta: #c2185b;
+  --color-tag-green-bg: #e6f4ea;
+  --color-tag-green: #1e7a46;
+  --color-tag-lavender-bg: #ebe8ff;
+  --color-tag-lavender: #5b4fc7;
+  --color-tag-blue: #4f8cff;
+  --color-tag-grey-bg: #f0f0f0;
+  --color-tag-grey: #5a5a5a;
+
+  /* Status badges */
+  --color-todo-badge-bg: #e4e2f9;
+  --color-todo-badge: #5f55c5;
 }
 
 #app {
