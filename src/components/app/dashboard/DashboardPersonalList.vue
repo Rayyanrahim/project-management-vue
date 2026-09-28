@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Plus } from '@lucide/vue'
+import { Card, CardActions, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton } from '@/components/ui/icon-button'
 import type { DashboardPersonalItem } from './types'
 
@@ -9,17 +10,17 @@ defineProps<{
 </script>
 
 <template>
-  <section
-    class="flex min-h-[280px] flex-col overflow-hidden rounded-xl border border-border-default bg-white"
-  >
-    <div class="flex items-center justify-between px-4 py-3">
-      <h2 class="text-[15px] font-semibold text-app-black">Personal List</h2>
-      <IconButton variant="ghost" class="hover:bg-surface-hover" aria-label="Add task">
-        <Plus class="h-4 w-4" />
-      </IconButton>
-    </div>
+  <Card class="flex min-h-[280px] flex-col">
+    <CardHeader :bordered="false">
+      <CardTitle>Personal List</CardTitle>
+      <CardActions>
+        <IconButton variant="ghost" class="hover:bg-surface-hover" aria-label="Add task">
+          <Plus class="h-4 w-4" />
+        </IconButton>
+      </CardActions>
+    </CardHeader>
 
-    <div class="border-t border-table-border px-2 py-2">
+    <CardContent class="min-h-0 flex-1 border-t border-table-border px-2 py-2">
       <div class="px-2 pb-1.5 text-[12px] font-semibold text-para">Tasks</div>
 
       <ul>
@@ -59,6 +60,6 @@ defineProps<{
         <Plus class="h-3.5 w-3.5" />
         Add Task
       </button>
-    </div>
-  </section>
+    </CardContent>
+  </Card>
 </template>

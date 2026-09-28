@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import {
   AlignLeft,
   Check,
@@ -9,6 +9,7 @@ import {
   Play,
   Plus,
   Search,
+  X,
 } from '@lucide/vue'
 import {
   Table,
@@ -20,7 +21,9 @@ import {
   TableRow,
   type TableSortDirection,
 } from '@/components/ui/table'
+import { Card, CardActions, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { IconButton } from '@/components/ui/icon-button'
+import { Input } from '@/components/ui/input'
 import type { DashboardStatus, DashboardWorkItem, DashboardWorkTag } from './types'
 
 const props = defineProps<{
@@ -36,6 +39,10 @@ const openGroups = ref<Record<string, boolean>>({
 
 const sortKey = ref<SortKey>('due')
 const sortDir = ref<TableSortDirection>('desc')
+const searchOpen = ref(false)
+const searchQuery = ref('')
+const searchInputRef = useTemplateRef<{ focus: () => void }>('searchInput')
+const searchWrapRef = useTemplateRef<HTMLElement>('searchWrap')
 
 const priorityOrder: Record<DashboardWorkItem['priority'], number> = {
   urgent: 4,
@@ -59,6 +66,12 @@ function parseDue(value: string) {
   return 0
 }
 
+function matchesSearch(item: DashboardWorkItem) {
+  const query = searchQuery.value.trim().toLowerCase()
+  if (!query) return true
+  return item.title.toLowerCase().includes(query)
+}
+
 function sortItems(items: DashboardWorkItem[]) {
   const dir = sortDir.value === 'asc' ? 1 : -1
 
@@ -78,8 +91,8 @@ function sortItems(items: DashboardWorkItem[]) {
 }
 
 const groups = computed(() => {
-  const completed = props.items.filter((item) => item.status === 'done')
-  const active = props.items.filter((item) => item.status !== 'done')
+  const completed = props.items.filter((item) => item.status === 'done' && matchesSearch(item))
+  const active = props.items.filter((item) => item.status !== 'done' && matchesSearch(item))
 
   return [
     {
@@ -115,6 +128,38 @@ function directionFor(key: SortKey): TableSortDirection | false {
   return sortKey.value === key ? sortDir.value : false
 }
 
+async function openSearch() {
+  searchOpen.value = true
+  await nextTick()
+  searchInputRef.value?.focus()
+}
+
+function closeSearch() {
+  searchOpen.value = false
+  searchQuery.value = ''
+}
+
+function onSearchKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    closeSearch()
+  }
+}
+
+function onDocumentPointerDown(event: PointerEvent) {
+  if (!searchOpen.value) return
+  const target = event.target as Node | null
+  if (target && searchWrapRef.value?.contains(target)) return
+  closeSearch()
+}
+
+onMounted(() => {
+  document.addEventListener('pointerdown', onDocumentPointerDown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('pointerdown', onDocumentPointerDown)
+})
+
 const priorityFlagClass: Record<DashboardWorkItem['priority'], string> = {
   urgent: 'text-priority-urgent',
   high: 'text-priority-high',
@@ -145,25 +190,54 @@ function isComplete(status: DashboardStatus) {
 </script>
 
 <template>
-  <section class="overflow-hidden rounded-xl border border-border-default bg-white">
-    <div
-      class="flex min-h-[52px] items-center justify-between gap-2 border-b border-border-default px-4"
-    >
-      <h2 class="text-[15px] font-semibold text-app-black">Assigned to me</h2>
-      <div class="flex shrink-0 items-center gap-0.5">
+  <Card>
+    <CardHeader>
+      <CardTitle>Assigned to me</CardTitle>
+      <CardActions>
         <IconButton variant="ghost" aria-label="Filter">
           <Plus class="h-4 w-4" />
         </IconButton>
         <IconButton variant="ghost" aria-label="Closed tasks">
           <CheckCircle2 class="h-4 w-4" />
         </IconButton>
-        <IconButton variant="ghost" aria-label="Search">
+
+        <Transition name="my-work-search">
+          <div
+            v-if="searchOpen"
+            ref="searchWrap"
+            class="my-work-search flex h-6 w-[180px] shrink-0 items-center gap-1.5 overflow-hidden rounded-md border border-primary bg-white px-2.5 shadow-[0_0_0_2px_color-mix(in_srgb,var(--color-primary)_18%,transparent)]"
+          >
+            <Search class="h-3.5 w-3.5 shrink-0 text-primary" />
+            <Input
+              ref="searchInput"
+              v-model="searchQuery"
+              type="search"
+              placeholder="Search..."
+              class="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-[13px] text-app-black shadow-none outline-none ring-0 placeholder:text-para focus:rounded-none focus:outline-none focus:ring-0"
+              @keydown="onSearchKeydown"
+            />
+            <button
+              type="button"
+              class="inline-flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center text-para hover:text-app-black"
+              aria-label="Close search"
+              @click="closeSearch"
+            >
+              <X class="h-3 w-3" />
+            </button>
+          </div>
+        </Transition>
+        <IconButton
+          v-show="!searchOpen"
+          variant="ghost"
+          aria-label="Search"
+          @click="openSearch"
+        >
           <Search class="h-4 w-4" />
         </IconButton>
-      </div>
-    </div>
+      </CardActions>
+    </CardHeader>
 
-    <div class="max-h-[28rem] overflow-y-auto">
+    <CardContent class="max-h-[28rem] overflow-y-auto">
       <div v-for="group in groups" :key="group.id">
         <button
           type="button"
@@ -271,7 +345,6 @@ function isComplete(status: DashboardStatus) {
                     {{ tag.label }}
                   </span>
                 </span>
-
               </TableCell>
 
               <TableCell class="flex items-center gap-1.5">
@@ -302,6 +375,35 @@ function isComplete(status: DashboardStatus) {
           <TableAddRow />
         </Table>
       </div>
-    </div>
-  </section>
+    </CardContent>
+  </Card>
 </template>
+
+<style scoped>
+.my-work-search-enter-active,
+.my-work-search-leave-active {
+  transition:
+    width 180ms cubic-bezier(0.2, 0, 0, 1),
+    opacity 150ms ease,
+    transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  transform-origin: right center;
+}
+
+.my-work-search-enter-from,
+.my-work-search-leave-to {
+  width: 0 !important;
+  opacity: 0;
+  transform: scaleX(0.85);
+  padding-left: 0;
+  padding-right: 0;
+  border-width: 0;
+  box-shadow: none;
+}
+
+.my-work-search-enter-to,
+.my-work-search-leave-from {
+  width: 180px;
+  opacity: 1;
+  transform: scaleX(1);
+}
+</style>
