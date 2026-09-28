@@ -1,6 +1,6 @@
 <template>
   <div class="app-dashboard">
-    <Tabs v-model="activeTab">
+    <Tabs v-model="activeTab" class="flex min-h-0 flex-1 flex-col">
       <AppPageHeader>
         <TabsList class="flex min-w-0 overflow-x-auto px-1">
           <template v-for="(tab, index) in inboxTabs" :key="tab.id">
@@ -41,52 +41,23 @@
         </TabsList>
       </AppPageHeader>
 
-      <div class="px-4 py-5">
-        <TabsContent value="primary">
-          <section
-            class="rounded-xl border border-border-default bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-          >
-            <div class="text-sm font-semibold text-app-black">Primary feed</div>
-            <p class="mt-2 text-sm text-para">
-              This panel is for the main inbox stream. Switch the top tabs and this content changes.
-            </p>
-          </section>
-        </TabsContent>
+      <TabsContent value="primary" class="flex min-h-0 flex-1 flex-col">
+        <InboxFeed tab="primary" />
+      </TabsContent>
 
-        <TabsContent value="other">
-          <section
-            class="rounded-xl border border-border-default bg-[#fcfcfc] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-          >
-            <div class="text-sm font-semibold text-app-black">Other feed</div>
-            <p class="mt-2 text-sm text-para">
-              This panel shows the secondary queue so you can clearly see the selected tab is
-              working.
-            </p>
-          </section>
-        </TabsContent>
+      <TabsContent value="other" class="flex min-h-0 flex-1 flex-col">
+        <InboxFeed tab="other" />
+      </TabsContent>
 
-        <TabsContent value="later">
-          <section
-            class="rounded-xl border border-border-default bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-          >
-            <div class="text-sm font-semibold text-app-black">Later feed</div>
-            <p class="mt-2 text-sm text-para">
-              This panel is for items you want to come back to later.
-            </p>
-          </section>
-        </TabsContent>
+      <TabsContent value="later" class="flex min-h-0 flex-1 flex-col">
+        <InboxFeed tab="later" />
+      </TabsContent>
 
-        <TabsContent value="cleared">
-          <section
-            class="rounded-xl border border-border-default bg-white p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-          >
-            <div class="text-sm font-semibold text-app-black">Cleared feed</div>
-            <p class="mt-2 text-sm text-para">
-              This panel holds completed or cleared items, separate from the active inbox.
-            </p>
-          </section>
-        </TabsContent>
-      </div>
+      <TabsContent value="cleared" class="flex min-h-0 flex-1 flex-col">
+        <div class="min-h-0 flex-1 overflow-y-auto bg-white">
+          <InboxEmptyState />
+        </div>
+      </TabsContent>
     </Tabs>
   </div>
 </template>
@@ -96,6 +67,7 @@ import { ref, watch } from 'vue'
 import { Activity, CheckCheck, Clock3, Inbox as InboxIcon } from '@lucide/vue'
 import { useRoute, useRouter } from 'vue-router'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
+import { InboxEmptyState, InboxFeed } from '@/components/app/inbox'
 import { Tabs, TabsContent, TabsList, TabsSeparator, TabsTrigger } from '@/components/ui/tabs'
 
 const inboxTabs = [

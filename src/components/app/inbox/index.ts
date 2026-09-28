@@ -1,0 +1,6 @@
+export { default as InboxEmptyState } from './InboxEmptyState.vue'
+export { default as InboxFeed } from './InboxFeed.vue'
+export { default as InboxItem } from './InboxItem.vue'
+export { default as InboxToolbar } from './InboxToolbar.vue'
+export { inboxFeedByTab } from './mock-data'
+export type { InboxActor, InboxGroup, InboxItem as InboxItemType, InboxStatusTone, InboxTabId } from './types'

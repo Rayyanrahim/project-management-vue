@@ -1,98 +1,52 @@
 <template>
   <div class="app-dashboard">
-    <Tabs v-model="activeTab">
-      <AppPageHeader>
-        <TabsList class="gap-1 px-1">
-          <TabsTrigger value="unread">Unread</TabsTrigger>
-          <TabsTrigger value="read">Read</TabsTrigger>
-        </TabsList>
-      </AppPageHeader>
-
-      <div class="flex min-h-0 flex-1 items-center justify-center px-4 py-10">
-        <TabsContent value="unread" class="flex w-full flex-col items-center text-center">
-          <div class="relative mb-6 h-[7.5rem] w-40">
-            <div
-              class="absolute left-6 top-0 h-[4.25rem] w-[7.25rem] rounded-xl border border-border-default bg-[#f3f3f3]"
-            />
-            <div
-              class="absolute left-3 top-3 h-[4.25rem] w-[7.25rem] rounded-xl border border-border-default bg-[#ececec]"
-            />
-            <div
-              class="absolute left-0 top-6 flex h-[4.25rem] w-[7.25rem] items-center gap-2 rounded-xl border border-border-default bg-[#f7f7f7] px-3"
-            >
-              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white">
-                <User class="h-4 w-4 text-para" />
-              </div>
-              <div class="flex flex-1 flex-col gap-1.5">
-                <span class="h-1.5 w-10 rounded-full bg-[#d9d9d9]" />
-                <span class="h-1.5 w-14 rounded-full bg-[#e5e5e5]" />
-              </div>
-            </div>
-            <div
-              class="absolute bottom-1 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#3a3a3a] text-white"
-            >
-              <Check class="h-4 w-4" />
-            </div>
-          </div>
-
-          <h2 class="text-[18px] font-semibold text-app-black">You're all caught up!</h2>
-          <p class="mt-1 text-sm text-para">Looks like you don't have any unread replies</p>
-
-          <Button
-            variant="app-outline"
-            class="mt-5 font-medium text-para"
-            @click="activeTab = 'read'"
-          >
-            Read old replies
-          </Button>
-
-          <div class="mt-6 flex flex-wrap justify-center gap-2" aria-label="Toast examples">
-            <Button size="md" @click="showSuccessToast">Success toast</Button>
-            <Button variant="app-outline" size="md" @click="showErrorToast">Error toast</Button>
-            <Button variant="app-outline" size="md" @click="showWarningToast">Warning toast</Button>
-            <Button variant="app-outline" size="md" @click="showInfoToast">Info toast</Button>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="read" class="flex w-full flex-col items-center text-center">
-          <h2 class="text-[18px] font-semibold text-app-black">No read replies yet</h2>
-          <p class="mt-1 text-sm text-para">Replies you have already seen will show up here</p>
-        </TabsContent>
+    <AppPageHeader>
+      <div class="flex items-center gap-2 py-3">
+        <span class="text-[14px] font-semibold text-app-black">Home</span>
       </div>
-    </Tabs>
+    </AppPageHeader>
+
+    <div class="min-h-0 flex-1 overflow-y-auto bg-[#f7f7f8]">
+      <div class="mx-auto flex w-full max-w-[1200px] flex-col gap-4 px-4 py-5 sm:px-6">
+        <h1 class="text-[22px] font-semibold tracking-tight text-app-black sm:text-[24px]">
+          {{ greeting }}, {{ dashboardUser.name }}
+        </h1>
+
+        <div class="grid items-stretch gap-4 lg:grid-cols-2">
+          <DashboardPersonalList :items="dashboardPersonalList" />
+          <DashboardRecents :items="dashboardRecents" />
+        </div>
+
+        <DashboardMyWork :items="dashboardMyWork" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Check, User } from '@lucide/vue'
+import { computed } from 'vue'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { toast } from '@/components/ui/toast'
+import {
+  DashboardMyWork,
+  DashboardPersonalList,
+  DashboardRecents,
+  dashboardMyWork,
+  dashboardPersonalList,
+  dashboardRecents,
+  dashboardUser,
+} from '@/components/app/dashboard'
 
-const activeTab = ref<'unread' | 'read'>('unread')
+const greeting = computed(() => {
+  const hour = new Date().getHours()
 
-function showSuccessToast() {
-  toast.success('Task created', {
-    description: 'Website redesign was added to your workspace.',
-    action: { label: 'View', onClick: () => undefined },
-  })
-}
+  if (hour < 12) {
+    return 'Good morning'
+  }
 
-function showErrorToast() {
-  toast.error('Could not upload attachment', {
-    description: 'Check your connection and try again.',
-  })
-}
+  if (hour < 17) {
+    return 'Good afternoon'
+  }
 
-function showWarningToast() {
-  toast.warning('Due date is approaching', {
-    description: 'This task is due tomorrow at 5:00 PM.',
-  })
-}
-
-function showInfoToast() {
-  toast.info('Changes saved automatically')
-}
+  return 'Good evening'
+})
 </script>
