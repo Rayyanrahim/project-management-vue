@@ -53,8 +53,14 @@ const priorityOrder: Record<DashboardWorkItem['priority'], number> = {
 }
 
 function parseDue(value: string) {
-  if (value.toLowerCase() === 'today') {
+  const normalized = value.toLowerCase()
+
+  if (normalized === 'today') {
     return Date.now()
+  }
+
+  if (normalized === 'tomorrow') {
+    return Date.now() + 86_400_000
   }
 
   const parts = value.split('/')
@@ -238,10 +244,10 @@ function isComplete(status: DashboardStatus) {
     </CardHeader>
 
     <CardContent class="max-h-[28rem] overflow-y-auto">
-      <div v-for="group in groups" :key="group.id">
+      <div v-for="group in groups" :key="group.id" class="relative">
         <button
           type="button"
-          class="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left hover:bg-table-hover"
+          class="sticky top-0 z-20 flex w-full cursor-pointer items-center gap-2 bg-white px-4 py-2 text-left hover:bg-table-hover"
           @click="toggleGroup(group.id)"
         >
           <span
@@ -267,7 +273,7 @@ function isComplete(status: DashboardStatus) {
         </button>
 
         <Table v-if="openGroups[group.id]" columns="minmax(0, 1fr) 120px 110px 36px">
-          <TableHeader>
+          <TableHeader class="sticky top-9 z-10 bg-white">
             <TableHead
               sortable
               :sort-direction="directionFor('name')"
@@ -339,7 +345,7 @@ function isComplete(status: DashboardStatus) {
                   <span
                     v-for="tag in item.tags"
                     :key="tag.label"
-                    class="inline-flex max-w-full items-center truncate rounded-full px-2.5 py-0.5 text-[11px] font-semibold leading-4"
+                    class="inline-flex max-w-full items-center truncate rounded-full px-1.5  text-[12px] font-normal leading-4"
                     :class="tagToneClass[tag.tone]"
                   >
                     {{ tag.label }}
