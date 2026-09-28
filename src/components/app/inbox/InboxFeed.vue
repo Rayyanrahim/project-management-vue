@@ -58,7 +58,7 @@ function toggleUnread(id: string) {
           {{ group.label }}
         </h3>
 
-        <div class="overflow-hidden rounded-xl border border-[#e8e8e8] bg-white">
+        <div class="overflow-hidden rounded-xl border border-inbox-card-border bg-white">
           <InboxItem
             v-for="item in group.items"
             :key="item.id"

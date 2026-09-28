@@ -1,10 +1,12 @@
 <template>
-  <div class="flex items-center justify-between border-b border-border-default px-2">
-    <div class="flex items-center gap-2">
+  <div
+    class="flex min-h-[48px] items-center justify-between gap-2 border-b border-border-default px-4"
+  >
+    <div class="flex min-w-0 items-center gap-2">
       <IconButton
         v-if="mobileSidebarHidden"
         variant="ghost"
-        class="inline-flex lg:hidden cursor-pointer"
+        class="inline-flex cursor-pointer lg:hidden"
         aria-label="Open mobile sidebar"
         @click="sidebarStore.openSidebar('mobile')"
       >
@@ -14,7 +16,7 @@
       <IconButton
         v-if="desktopSidebarHidden"
         variant="ghost"
-        class="hidden lg:inline-flex cursor-pointer"
+        class="hidden cursor-pointer lg:inline-flex"
         aria-label="Open desktop sidebar"
         @click="sidebarStore.openSidebar('desktop')"
       >
@@ -22,6 +24,10 @@
       </IconButton>
 
       <slot />
+    </div>
+
+    <div v-if="$slots.actions" class="flex shrink-0 items-center gap-0.5">
+      <slot name="actions" />
     </div>
   </div>
 </template>

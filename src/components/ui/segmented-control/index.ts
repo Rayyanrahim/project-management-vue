@@ -10,7 +10,7 @@ export type SegmentedControlOption<T extends string = string> = {
 }
 
 export const segmentedControlVariants = cva(
-  'inline-flex items-center gap-1 rounded-lg bg-[#f3f3f3] p-0.5',
+  'inline-flex items-center gap-1 rounded-lg bg-surface-hover p-0.5',
   {
     variants: {
       size: {

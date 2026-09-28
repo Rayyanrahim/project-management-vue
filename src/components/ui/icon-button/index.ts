@@ -4,13 +4,13 @@ import { cva } from 'class-variance-authority'
 export { default as IconButton } from './IconButton.vue'
 
 export const iconButtonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg text-gray-500 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400',
+  'inline-flex cursor-pointer items-center justify-center rounded-md text-para transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        ghost: 'hover:bg-gray-100 hover:text-gray-900',
-        outline: 'border border-[var(--color-border-default)] bg-white hover:bg-gray-50 hover:text-gray-900',
-        subtle: 'bg-gray-100 hover:bg-gray-200 hover:text-gray-900',
+        ghost: 'hover:bg-surface-hover hover:text-app-black',
+        outline: 'border border-surface-muted bg-white hover:bg-surface-hover hover:text-app-black',
+        subtle: 'bg-surface-hover hover:bg-gray-200 hover:text-app-black',
       },
       size: {
         sm: 'h-7 w-7',

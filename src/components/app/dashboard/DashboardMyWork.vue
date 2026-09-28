@@ -5,12 +5,10 @@ import {
   Check,
   CheckCircle2,
   Flag,
-  ListFilter,
   Paperclip,
   Play,
   Plus,
   Search,
-  Settings2,
 } from '@lucide/vue'
 import {
   Table,
@@ -20,17 +18,64 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  type TableSortDirection,
 } from '@/components/ui/table'
+import { IconButton } from '@/components/ui/icon-button'
 import type { DashboardStatus, DashboardWorkItem, DashboardWorkTag } from './types'
 
 const props = defineProps<{
   items: DashboardWorkItem[]
 }>()
 
+type SortKey = 'name' | 'priority' | 'due'
+
 const openGroups = ref<Record<string, boolean>>({
   done: true,
   active: true,
 })
+
+const sortKey = ref<SortKey>('due')
+const sortDir = ref<TableSortDirection>('desc')
+
+const priorityOrder: Record<DashboardWorkItem['priority'], number> = {
+  urgent: 4,
+  high: 3,
+  normal: 2,
+  low: 1,
+  none: 0,
+}
+
+function parseDue(value: string) {
+  if (value.toLowerCase() === 'today') {
+    return Date.now()
+  }
+
+  const parts = value.split('/')
+  if (parts.length === 3) {
+    const [month, day, year] = parts.map(Number)
+    return new Date(2000 + year, month - 1, day).getTime()
+  }
+
+  return 0
+}
+
+function sortItems(items: DashboardWorkItem[]) {
+  const dir = sortDir.value === 'asc' ? 1 : -1
+
+  return [...items].sort((a, b) => {
+    let compare = 0
+
+    if (sortKey.value === 'name') {
+      compare = a.title.localeCompare(b.title)
+    } else if (sortKey.value === 'priority') {
+      compare = priorityOrder[a.priority] - priorityOrder[b.priority]
+    } else {
+      compare = parseDue(a.due) - parseDue(b.due)
+    }
+
+    return compare * dir
+  })
+}
 
 const groups = computed(() => {
   const completed = props.items.filter((item) => item.status === 'done')
@@ -41,19 +86,33 @@ const groups = computed(() => {
       id: 'done',
       label: 'COMPLETED',
       badgeClass: 'bg-success text-white',
-      items: completed,
+      items: sortItems(completed),
     },
     {
       id: 'active',
       label: 'TO DO',
       badgeClass: 'bg-todo-badge-bg text-todo-badge',
-      items: active,
+      items: sortItems(active),
     },
   ].filter((group) => group.items.length > 0)
 })
 
 function toggleGroup(id: string) {
   openGroups.value[id] = !openGroups.value[id]
+}
+
+function toggleSort(key: SortKey) {
+  if (sortKey.value === key) {
+    sortDir.value = sortDir.value === 'desc' ? 'asc' : 'desc'
+    return
+  }
+
+  sortKey.value = key
+  sortDir.value = 'desc'
+}
+
+function directionFor(key: SortKey): TableSortDirection | false {
+  return sortKey.value === key ? sortDir.value : false
 }
 
 const priorityFlagClass: Record<DashboardWorkItem['priority'], string> = {
@@ -87,37 +146,20 @@ function isComplete(status: DashboardStatus) {
 
 <template>
   <section class="overflow-hidden rounded-xl border border-border-default bg-white">
-    <div class="flex items-center justify-between px-4 py-3.5">
+    <div
+      class="flex min-h-[52px] items-center justify-between gap-2 border-b border-border-default px-4"
+    >
       <h2 class="text-[15px] font-semibold text-app-black">Assigned to me</h2>
-      <div class="flex items-center gap-0.5">
-        <button
-          type="button"
-          class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-para hover:bg-surface-hover"
-          aria-label="Filter"
-        >
-          <ListFilter class="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-para hover:bg-surface-hover"
-          aria-label="Closed tasks"
-        >
-          <CheckCircle2 class="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-para hover:bg-surface-hover"
-          aria-label="Search"
-        >
-          <Search class="h-3.5 w-3.5" />
-        </button>
-        <button
-          type="button"
-          class="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-surface-muted text-para hover:bg-surface-hover"
-          aria-label="Settings"
-        >
-          <Settings2 class="h-3.5 w-3.5" />
-        </button>
+      <div class="flex shrink-0 items-center gap-0.5">
+        <IconButton variant="ghost" aria-label="Filter">
+          <Plus class="h-4 w-4" />
+        </IconButton>
+        <IconButton variant="ghost" aria-label="Closed tasks">
+          <CheckCircle2 class="h-4 w-4" />
+        </IconButton>
+        <IconButton variant="ghost" aria-label="Search">
+          <Search class="h-4 w-4" />
+        </IconButton>
       </div>
     </div>
 
@@ -152,9 +194,27 @@ function isComplete(status: DashboardStatus) {
 
         <Table v-if="openGroups[group.id]" columns="minmax(0, 1fr) 120px 110px 36px">
           <TableHeader>
-            <TableHead sortable>Name</TableHead>
-            <TableHead sortable>Priority</TableHead>
-            <TableHead sortable sorted>Due date</TableHead>
+            <TableHead
+              sortable
+              :sort-direction="directionFor('name')"
+              @click="toggleSort('name')"
+            >
+              Name
+            </TableHead>
+            <TableHead
+              sortable
+              :sort-direction="directionFor('priority')"
+              @click="toggleSort('priority')"
+            >
+              Priority
+            </TableHead>
+            <TableHead
+              sortable
+              :sort-direction="directionFor('due')"
+              @click="toggleSort('due')"
+            >
+              Due date
+            </TableHead>
             <button
               type="button"
               class="inline-flex h-6 w-6 cursor-pointer items-center justify-center justify-self-end rounded border-none text-table-muted hover:bg-table-head-hover"
@@ -167,7 +227,7 @@ function isComplete(status: DashboardStatus) {
 
           <TableBody>
             <TableRow v-for="item in group.items" :key="item.id">
-              <TableCell class="group/name flex items-center gap-1.5 overflow-hidden py-2.5 pr-1">
+              <TableCell class="group/name flex items-center gap-1.5 overflow-hidden px-0 py-2.5 pr-1">
                 <button
                   type="button"
                   class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-table-muted opacity-0 transition-colors hover:bg-table-head-hover group-hover/name:opacity-100"
@@ -186,11 +246,7 @@ function isComplete(status: DashboardStatus) {
                       : 'border-[1.5px] border-priority-none bg-white'
                   "
                 >
-                  <Check
-                    v-if="isComplete(item.status)"
-                    class="h-2.5 w-2.5"
-                    stroke-width="3.5"
-                  />
+                  <Check v-if="isComplete(item.status)" class="h-2.5 w-2.5" stroke-width="3.5" />
                 </span>
 
                 <span class="min-w-0 truncate text-[13px] font-semibold leading-5 text-table-title">
@@ -216,36 +272,25 @@ function isComplete(status: DashboardStatus) {
                   </span>
                 </span>
 
-                <button
-                  type="button"
-                  class="ml-auto inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border border-table-control bg-white text-table-muted opacity-0 transition-opacity hover:bg-table-control-hover group-hover/name:opacity-100"
-                  title="Add"
-                  aria-label="Add"
-                  @click.stop
-                >
-                  <Plus class="h-3 w-3" />
-                </button>
               </TableCell>
 
-              <TableCell class="flex items-center gap-1.5 py-2.5">
+              <TableCell class="flex items-center gap-1.5">
                 <Flag
-                  class="h-3.5 w-3.5 shrink-0"
+                  class="h-4 w-4 shrink-0"
                   :class="priorityFlagClass[item.priority]"
                   :fill="item.priority === 'none' ? 'none' : 'currentColor'"
                 />
                 <span
                   v-if="priorityLabel[item.priority]"
-                  class="truncate text-[12px] text-table-head"
+                  class="truncate text-sm text-table-head"
                 >
                   {{ priorityLabel[item.priority] }}
                 </span>
               </TableCell>
 
               <TableCell
-                class="truncate py-2.5 text-[12px]"
-                :class="
-                  item.status === 'overdue' ? 'font-medium text-danger' : 'text-success'
-                "
+                class="truncate text-sm"
+                :class="item.status === 'overdue' ? 'font-medium text-danger' : 'text-success'"
               >
                 {{ item.due }}
               </TableCell>

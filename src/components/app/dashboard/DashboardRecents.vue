@@ -19,9 +19,9 @@ defineProps<{
       <li v-for="item in items" :key="item.id">
         <button
           type="button"
-          class="flex w-full min-w-0 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-3 py-1.5 text-left transition-colors hover:bg-[#f3f3f3]"
+          class="flex w-full min-w-0 cursor-pointer items-center gap-2 overflow-hidden rounded-md px-3 py-1.5 text-left transition-colors hover:bg-surface-hover"
         >
-          <CircleDot class="h-3.5 w-3.5 shrink-0 text-[#9a9a9a]" />
+          <CircleDot class="h-3.5 w-3.5 shrink-0 text-icon-subtle" />
 
           <span class="min-w-0 flex-1 truncate text-[13px] leading-5">
             <span class="font-medium text-app-black">{{ item.title }}</span>

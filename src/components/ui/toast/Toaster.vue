@@ -30,10 +30,10 @@ const icons: Record<ToastType, Component> = {
 }
 
 const iconClasses: Record<ToastType, string> = {
-  success: 'text-[#168a51]',
-  error: 'text-[#d33c3c]',
-  warning: 'text-[#a75524]',
-  info: 'text-[#3975dc]',
+  success: 'text-toast-success',
+  error: 'text-toast-error',
+  warning: 'text-toast-warning',
+  info: 'text-toast-info',
 }
 
 const visibleToasts = computed(() => {
@@ -116,7 +116,7 @@ function runAction(item: ToastItem) {
           <button
             type="button"
             :aria-label="`Dismiss ${item.title} notification`"
-            class="pointer-events-none absolute -right-2 -top-2 flex h-5 w-5 scale-90 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border-default bg-white text-para opacity-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-[opacity,transform,background-color,color] duration-150 hover:bg-[#f6f6f6] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#a952ff] group-focus-within/toast:pointer-events-auto group-focus-within/toast:scale-100 group-focus-within/toast:opacity-100 group-hover/toast:pointer-events-auto group-hover/toast:scale-100 group-hover/toast:opacity-100 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:scale-100 [@media(hover:none)]:opacity-100"
+            class="pointer-events-none absolute -right-2 -top-2 flex h-5 w-5 scale-90 shrink-0 cursor-pointer items-center justify-center rounded-full border border-border-default bg-white text-para opacity-0 shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-[opacity,transform,background-color,color] duration-150 hover:bg-toast-close-hover focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary group-focus-within/toast:pointer-events-auto group-focus-within/toast:scale-100 group-focus-within/toast:opacity-100 group-hover/toast:pointer-events-auto group-hover/toast:scale-100 group-hover/toast:opacity-100 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:scale-100 [@media(hover:none)]:opacity-100"
             @click="toast.dismiss(item.id)"
           >
             <Minus class="h-3 w-3" :stroke-width="1.8" />

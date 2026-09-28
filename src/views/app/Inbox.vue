@@ -8,7 +8,7 @@
               :value="tab.id"
               :size="inboxTabSize"
               class="min-w-[250px]"
-              inner-class="mx-1 bg-transparent font-medium text-app-black hover:bg-[#f3f3f3]"
+              inner-class="mx-1 bg-transparent font-medium text-app-black hover:bg-surface-hover"
             >
               <template #default="{ selected }">
                 <component
@@ -35,7 +35,7 @@
               v-if="index < inboxTabs.length - 1"
               inline
               :size="inboxTabSize"
-              class="my-auto self-auto bg-[#e6e9ee]"
+              class="my-auto self-auto bg-tabs-separator"
             />
           </template>
         </TabsList>

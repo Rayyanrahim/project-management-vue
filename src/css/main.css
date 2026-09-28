@@ -23,6 +23,14 @@
   --color-sidebar-bg: #f9f9f9;
   --app-control-height: 28px;
 
+  /* Surfaces */
+  --color-page-bg: #f7f7f8;
+  --color-surface-hover: #f3f3f3;
+  --color-row-hover: #f7f7f7;
+  --color-white: #ffffff;
+
+  --color-badge-hover-table : #DADADA;
+
   /* Table */
   --color-table-border: #f0f0f0;
   --color-table-head: #6b6b6b;
@@ -35,11 +43,12 @@
   --color-table-icon: #b5b5b5;
   --color-table-control: #e0e0e0;
   --color-table-control-hover: #f5f5f5;
-  --color-surface-hover: #f3f3f3;
 
   /* Status */
   --color-success: #008844;
+  --color-success-bright: #30a46c;
   --color-danger: #c62828;
+  --color-warning: #f5a524;
 
   /* Priority */
   --color-priority-urgent: #e5484d;
@@ -61,6 +70,27 @@
   /* Status badges */
   --color-todo-badge-bg: #e4e2f9;
   --color-todo-badge: #5f55c5;
+
+  /* Inbox / misc UI */
+  --color-icon-subtle: #9a9a9a;
+  --color-inbox-border: #ebebeb;
+  --color-inbox-card-border: #e8e8e8;
+  --color-inbox-toolbar-border: #e2e2e2;
+  --color-inbox-actor: #292929;
+  --color-inbox-time: #8a8a8a;
+  --color-inbox-neutral: #c3c6cb;
+  --color-inbox-neutral-fg: #5f6368;
+  --color-inbox-clear: #7b68ee;
+  --color-inbox-clear-hover: #6a58e0;
+  --color-inbox-avatar-fallback: #64748b;
+  --color-tabs-separator: #e6e9ee;
+
+  /* Toast */
+  --color-toast-success: #168a51;
+  --color-toast-error: #d33c3c;
+  --color-toast-warning: #a75524;
+  --color-toast-info: #3975dc;
+  --color-toast-close-hover: #f6f6f6;
 }
 
 #app {
@@ -91,12 +121,12 @@
 }
 
 .theme-auth .auth-muted-link {
-  color: #6b7280;
+  color: var(--color-app-muted);
   text-decoration: none;
 }
 
 .theme-auth .auth-muted-link:hover {
-  color: #374151;
+  color: var(--color-app-black);
   text-decoration: underline;
 }
 
