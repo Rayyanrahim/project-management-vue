@@ -22,20 +22,17 @@ import {
   type TableSortDirection,
 } from '@/components/ui/table'
 import { Card, CardActions, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { IconButton } from '@/components/ui/icon-button'
 import { Input } from '@/components/ui/input'
-import type { DashboardStatus, DashboardWorkItem, DashboardWorkTag } from './types'
+import { Tag } from '@/components/ui/tag'
+import type { DashboardStatus, DashboardWorkItem } from './types'
 
 const props = defineProps<{
   items: DashboardWorkItem[]
 }>()
 
 type SortKey = 'name' | 'priority' | 'due'
-
-const openGroups = ref<Record<string, boolean>>({
-  done: true,
-  active: true,
-})
 
 const sortKey = ref<SortKey>('due')
 const sortDir = ref<TableSortDirection>('desc')
@@ -116,10 +113,6 @@ const groups = computed(() => {
   ].filter((group) => group.items.length > 0)
 })
 
-function toggleGroup(id: string) {
-  openGroups.value[id] = !openGroups.value[id]
-}
-
 function toggleSort(key: SortKey) {
   if (sortKey.value === key) {
     sortDir.value = sortDir.value === 'desc' ? 'asc' : 'desc'
@@ -182,14 +175,6 @@ const priorityLabel: Record<DashboardWorkItem['priority'], string> = {
   none: '',
 }
 
-const tagToneClass: Record<DashboardWorkTag['tone'], string> = {
-  magenta: 'bg-tag-magenta text-white',
-  green: 'bg-tag-green-bg text-tag-green',
-  lavender: 'bg-tag-lavender-bg text-tag-lavender',
-  blue: 'bg-tag-blue text-white',
-  grey: 'bg-tag-grey-bg text-tag-grey',
-}
-
 function isComplete(status: DashboardStatus) {
   return status === 'done'
 }
@@ -244,143 +229,147 @@ function isComplete(status: DashboardStatus) {
     </CardHeader>
 
     <CardContent class="max-h-[28rem] overflow-y-auto">
-      <div v-for="group in groups" :key="group.id" class="relative">
-        <button
-          type="button"
-          class="sticky top-0 z-20 flex w-full cursor-pointer items-center gap-2 bg-white px-4 py-2 text-left hover:bg-table-hover"
-          @click="toggleGroup(group.id)"
+      <Accordion type="multiple" :default-value="['done', 'active']">
+        <AccordionItem
+          v-for="group in groups"
+          :key="group.id"
+          :value="group.id"
+          class="relative"
         >
-          <span
-            class="inline-block h-0 w-0 shrink-0 border-x-[3.5px] border-x-transparent border-t-[5px] border-t-table-head transition-transform"
-            :class="openGroups[group.id] ? '' : '-rotate-90'"
-            aria-hidden="true"
-          />
-
-          <span
-            class="inline-flex items-center gap-1.5 rounded-[4px] px-2 py-[3px] text-[11px] font-bold tracking-[0.02em]"
-            :class="group.badgeClass"
+          <AccordionTrigger
+            class="sticky top-0 z-20 flex w-full cursor-pointer items-center gap-2 bg-white px-4 py-2 text-left hover:bg-table-hover"
           >
-            <span
-              v-if="group.id === 'done'"
-              class="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white"
-            >
-              <Check class="h-2.5 w-2.5 text-success" stroke-width="3.5" />
-            </span>
-            {{ group.label }}
-          </span>
+            <template #default="{ open }">
+              <span
+                class="inline-block h-0 w-0 shrink-0 border-x-[3.5px] border-x-transparent border-t-[5px] border-t-table-head transition-transform"
+                :class="open ? '' : '-rotate-90'"
+                aria-hidden="true"
+              />
 
-          <span class="text-[12px] text-table-muted">{{ group.items.length }}</span>
-        </button>
+              <span
+                class="inline-flex items-center gap-1.5 rounded-[4px] px-2 py-[3px] text-[11px] font-bold tracking-[0.02em]"
+                :class="group.badgeClass"
+              >
+                <span
+                  v-if="group.id === 'done'"
+                  class="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white"
+                >
+                  <Check class="h-2.5 w-2.5 text-success" stroke-width="3.5" />
+                </span>
+                {{ group.label }}
+              </span>
 
-        <Table v-if="openGroups[group.id]" columns="minmax(0, 1fr) 120px 110px 36px">
-          <TableHeader class="sticky top-9 z-10 bg-white">
-            <TableHead
-              sortable
-              :sort-direction="directionFor('name')"
-              @click="toggleSort('name')"
-            >
-              Name
-            </TableHead>
-            <TableHead
-              sortable
-              :sort-direction="directionFor('priority')"
-              @click="toggleSort('priority')"
-            >
-              Priority
-            </TableHead>
-            <TableHead
-              sortable
-              :sort-direction="directionFor('due')"
-              @click="toggleSort('due')"
-            >
-              Due date
-            </TableHead>
-            <button
-              type="button"
-              class="inline-flex h-6 w-6 cursor-pointer items-center justify-center justify-self-end rounded border-none text-table-muted hover:bg-table-head-hover"
-              aria-label="Add column"
-              @click.stop
-            >
-              <Plus class="h-3.5 w-3.5" />
-            </button>
-          </TableHeader>
+              <span class="text-[12px] font-semibold text-table-muted">{{ group.items.length }}</span>
+            </template>
+          </AccordionTrigger>
 
-          <TableBody>
-            <TableRow v-for="item in group.items" :key="item.id">
-              <TableCell class="group/name flex items-center gap-1.5 overflow-hidden px-0 py-2.5 pr-1">
+          <AccordionContent>
+            <Table columns="minmax(0, 1fr) 120px 110px 36px">
+              <TableHeader class="sticky top-9 z-10 bg-white">
+                <TableHead
+                  sortable
+                  :sort-direction="directionFor('name')"
+                  @click="toggleSort('name')"
+                >
+                  Name
+                </TableHead>
+                <TableHead
+                  sortable
+                  :sort-direction="directionFor('priority')"
+                  @click="toggleSort('priority')"
+                >
+                  Priority
+                </TableHead>
+                <TableHead
+                  sortable
+                  :sort-direction="directionFor('due')"
+                  @click="toggleSort('due')"
+                >
+                  Due date
+                </TableHead>
                 <button
                   type="button"
-                  class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-table-muted opacity-0 transition-colors hover:bg-table-head-hover group-hover/name:opacity-100"
-                  title="Create subtask"
-                  aria-label="Create subtask"
+                  class="inline-flex h-6 w-6 cursor-pointer items-center justify-center justify-self-end rounded border-none text-table-muted hover:bg-table-head-hover"
+                  aria-label="Add column"
                   @click.stop
                 >
-                  <Play class="h-2 w-2 fill-current" />
+                  <Plus class="h-3.5 w-3.5" />
                 </button>
+              </TableHeader>
 
-                <span
-                  class="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                  :class="
-                    isComplete(item.status)
-                      ? 'bg-success text-white'
-                      : 'border-[1.5px] border-priority-none bg-white'
-                  "
-                >
-                  <Check v-if="isComplete(item.status)" class="h-2.5 w-2.5" stroke-width="3.5" />
-                </span>
+              <TableBody>
+                <TableRow v-for="item in group.items" :key="item.id">
+                  <TableCell class="group/name flex items-center gap-1.5 overflow-hidden px-0 py-2.5 pr-1">
+                    <button
+                      type="button"
+                      class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-table-muted opacity-0 transition-colors hover:bg-table-head-hover group-hover/name:opacity-100"
+                      title="Create subtask"
+                      aria-label="Create subtask"
+                      @click.stop
+                    >
+                      <Play class="h-2 w-2 fill-current" />
+                    </button>
 
-                <span class="min-w-0 truncate text-[13px] font-semibold leading-5 text-table-title">
-                  {{ item.title }}
-                </span>
+                    <span
+                      class="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
+                      :class="
+                        isComplete(item.status)
+                          ? 'bg-success text-white'
+                          : 'border-[1.5px] border-priority-none bg-white'
+                      "
+                    >
+                      <Check v-if="isComplete(item.status)" class="h-2.5 w-2.5" stroke-width="3.5" />
+                    </span>
 
-                <span class="flex shrink-0 items-center gap-1 text-table-icon">
-                  <AlignLeft v-if="item.hasDescription" class="h-3.5 w-3.5" />
-                  <Paperclip v-if="item.hasAttachment" class="h-3.5 w-3.5" />
-                </span>
+                    <span class="min-w-0 truncate text-[13px] font-semibold leading-5 text-table-title">
+                      {{ item.title }}
+                    </span>
 
-                <span
-                  v-if="item.tags?.length"
-                  class="flex min-w-0 shrink items-center gap-1 overflow-hidden"
-                >
-                  <span
-                    v-for="tag in item.tags"
-                    :key="tag.label"
-                    class="inline-flex max-w-full items-center truncate rounded-full px-1.5  text-[12px] font-normal leading-4"
-                    :class="tagToneClass[tag.tone]"
+                    <span class="flex shrink-0 items-center gap-1 text-table-icon">
+                      <AlignLeft v-if="item.hasDescription" class="h-3.5 w-3.5" />
+                      <Paperclip v-if="item.hasAttachment" class="h-3.5 w-3.5" />
+                    </span>
+
+                    <span
+                      v-if="item.tags?.length"
+                      class="flex min-w-0 shrink items-center gap-1 overflow-hidden"
+                    >
+                      <Tag v-for="tag in item.tags" :key="tag.label" :tone="tag.tone">
+                        {{ tag.label }}
+                      </Tag>
+                    </span>
+                  </TableCell>
+
+                  <TableCell class="flex items-center gap-1.5">
+                    <Flag
+                      class="h-4 w-4 shrink-0"
+                      :class="priorityFlagClass[item.priority]"
+                      :fill="item.priority === 'none' ? 'none' : 'currentColor'"
+                    />
+                    <span
+                      v-if="priorityLabel[item.priority]"
+                      class="truncate text-sm text-table-head"
+                    >
+                      {{ priorityLabel[item.priority] }}
+                    </span>
+                  </TableCell>
+
+                  <TableCell
+                    class="truncate text-sm"
+                    :class="item.status === 'overdue' ? 'font-medium text-danger' : 'text-success'"
                   >
-                    {{ tag.label }}
-                  </span>
-                </span>
-              </TableCell>
+                    {{ item.due }}
+                  </TableCell>
 
-              <TableCell class="flex items-center gap-1.5">
-                <Flag
-                  class="h-4 w-4 shrink-0"
-                  :class="priorityFlagClass[item.priority]"
-                  :fill="item.priority === 'none' ? 'none' : 'currentColor'"
-                />
-                <span
-                  v-if="priorityLabel[item.priority]"
-                  class="truncate text-sm text-table-head"
-                >
-                  {{ priorityLabel[item.priority] }}
-                </span>
-              </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableBody>
 
-              <TableCell
-                class="truncate text-sm"
-                :class="item.status === 'overdue' ? 'font-medium text-danger' : 'text-success'"
-              >
-                {{ item.due }}
-              </TableCell>
-
-              <TableCell />
-            </TableRow>
-          </TableBody>
-
-          <TableAddRow />
-        </Table>
-      </div>
+              <TableAddRow />
+            </Table>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </CardContent>
   </Card>
 </template>

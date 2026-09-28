@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { Check, Clock3, FileText, CircleAlert, CircleDot, Mail } from '@lucide/vue'
 import { IconButton } from '@/components/ui/icon-button'
 import type { InboxItem, InboxStatusTone } from './types'
-
+import { Button } from '@/components/ui/button'
 const props = defineProps<{
   item: InboxItem
 }>()
@@ -114,14 +114,14 @@ function renderAction(action: string) {
         >
           <Clock3 class="h-3.5 w-3.5" />
         </IconButton>
-        <button
+        <Button
           type="button"
-          class="inline-flex h-7 cursor-pointer items-center gap-1 rounded-md bg-inbox-clear px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-inbox-clear-hover"
+          class="inline-flex h-7 cursor-pointer  rounded-md bg-inbox-clear px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-inbox-clear-hover"
           @click.stop="emit('clear', item.id)"
         >
           <Check class="h-3.5 w-3.5" stroke-width="3" />
           Clear
-        </button>
+        </Button>
       </div>
     </div>
   </div>

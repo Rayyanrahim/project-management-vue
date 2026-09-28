@@ -8,10 +8,11 @@ export type DashboardRecentItem = {
   color: string
 }
 
+import type { TagTone } from '@/components/ui/tag'
+
 export type DashboardWorkTag = {
   label: string
-  /** Tailwind-like class pair, or preset tone */
-  tone: 'magenta' | 'green' | 'lavender' | 'blue' | 'grey'
+  tone: TagTone
 }
 
 export type DashboardWorkItem = {
