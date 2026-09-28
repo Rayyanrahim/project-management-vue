@@ -3,16 +3,10 @@ import { computed, provide, type HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 import { TABLE_GRID_KEY } from './table-context'
 
-const props = withDefaults(
-  defineProps<{
-    /** CSS grid-template-columns value */
-    columns?: string
-    class?: HTMLAttributes['class']
-  }>(),
-  {
-    columns: 'minmax(0, 1fr) 120px 110px 36px',
-  },
-)
+const props = defineProps<{
+  columns?: string
+  class?: HTMLAttributes['class']
+}>()
 
 provide(
   TABLE_GRID_KEY,

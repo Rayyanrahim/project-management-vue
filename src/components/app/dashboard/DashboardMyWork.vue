@@ -264,7 +264,7 @@ function isComplete(status: DashboardStatus) {
           </AccordionTrigger>
 
           <AccordionContent>
-            <Table columns="minmax(0, 1fr) 120px 110px 36px">
+            <Table columns="minmax(0, 1fr) 120px 110px">
               <TableHeader class="sticky top-9 z-10 bg-white">
                 <TableHead
                   sortable
@@ -287,14 +287,6 @@ function isComplete(status: DashboardStatus) {
                 >
                   Due date
                 </TableHead>
-                <button
-                  type="button"
-                  class="inline-flex h-6 w-6 cursor-pointer items-center justify-center justify-self-end rounded border-none text-table-muted hover:bg-table-head-hover"
-                  aria-label="Add column"
-                  @click.stop
-                >
-                  <Plus class="h-3.5 w-3.5" />
-                </button>
               </TableHeader>
 
               <TableBody>
@@ -360,8 +352,6 @@ function isComplete(status: DashboardStatus) {
                   >
                     {{ item.due }}
                   </TableCell>
-
-                  <TableCell />
                 </TableRow>
               </TableBody>
 
