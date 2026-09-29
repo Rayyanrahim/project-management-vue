@@ -21,6 +21,7 @@
         <Input
           id="name"
           v-model="formData.name"
+          variant="auth"
           type="text"
           name="name"
           autocomplete="name"
@@ -36,6 +37,7 @@
         <Input
           id="email"
           v-model="formData.email"
+          variant="auth"
           type="email"
           name="email"
           autocomplete="email"
@@ -52,6 +54,7 @@
           <Input
             id="password"
             v-model="formData.password"
+            variant="auth"
             :type="showPassword ? 'text' : 'password'"
             name="password"
             autocomplete="new-password"
@@ -78,6 +81,7 @@
           <Input
             id="confirmPassword"
             v-model="formData.confirmPassword"
+            variant="auth"
             :type="showConfirmPassword ? 'text' : 'password'"
             name="confirmPassword"
             autocomplete="new-password"

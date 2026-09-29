@@ -19,6 +19,7 @@
           <Input
             id="password"
             v-model="formData.password"
+            variant="auth"
             :type="showPassword ? 'text' : 'password'"
             name="password"
             autocomplete="new-password"
@@ -46,6 +47,7 @@
           <Input
             id="confirmPassword"
             v-model="formData.confirmPassword"
+            variant="auth"
             :type="showConfirmPassword ? 'text' : 'password'"
             name="confirmPassword"
             autocomplete="new-password"

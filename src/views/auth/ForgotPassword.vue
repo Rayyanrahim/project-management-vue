@@ -14,6 +14,7 @@
             <Input
               id="email"
               v-model="formData.email"
+              variant="auth"
               type="email"
               name="email"
               autocomplete="email"

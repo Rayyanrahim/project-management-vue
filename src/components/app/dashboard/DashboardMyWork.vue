@@ -25,6 +25,7 @@ import { Card, CardActions, CardContent, CardHeader, CardTitle } from '@/compone
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { IconButton } from '@/components/ui/icon-button'
 import { Input } from '@/components/ui/input'
+import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
 import { Tag } from '@/components/ui/tag'
 import type { DashboardStatus, DashboardWorkItem } from './types'
 
@@ -196,24 +197,30 @@ function isComplete(status: DashboardStatus) {
           <div
             v-if="searchOpen"
             ref="searchWrap"
-            class="app-input-shell my-work-search h-6 w-[180px]"
+            class="my-work-search w-[180px] shrink-0"
           >
-            <Search class="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
-            <Input
-              ref="searchInput"
-              v-model="searchQuery"
-              type="search"
-              placeholder="Search..."
-              @keydown="onSearchKeydown"
-            />
-            <IconButton
-              variant="ghost"
-              ariaLabel="Close search"
-              class="h-4 w-4 shrink-0 text-para hover:bg-transparent hover:text-app-black"
-              @click="closeSearch"
-            >
-              <X class="h-3 w-3" />
-            </IconButton>
+            <InputGroup class="h-6 w-full">
+              <Input
+                ref="searchInput"
+                v-model="searchQuery"
+                type="search"
+                placeholder="Search..."
+                @keydown="onSearchKeydown"
+              />
+              <InputGroupAddon class="text-primary">
+                <Search />
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                <button
+                  type="button"
+                  class="inline-flex h-4 w-4 cursor-pointer items-center justify-center text-para transition-colors hover:text-app-black"
+                  aria-label="Close search"
+                  @click="closeSearch"
+                >
+                  <X class="h-3 w-3" />
+                </button>
+              </InputGroupAddon>
+            </InputGroup>
           </div>
         </Transition>
         <IconButton
@@ -236,7 +243,7 @@ function isComplete(status: DashboardStatus) {
           class="relative"
         >
           <AccordionTrigger
-            class="sticky top-0 z-20 flex w-full cursor-pointer items-center gap-2 bg-white px-4 py-2 text-left hover:bg-table-hover"
+            class="sticky top-0 z-20 flex w-full cursor-pointer items-center gap-2 bg-white px-4 pt-5 pb-2 text-left hover:bg-table-hover"
           >
             <template #default="{ open }">
               <span

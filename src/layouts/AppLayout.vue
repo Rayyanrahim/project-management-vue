@@ -10,7 +10,7 @@
             class="app-sidebar-mobile block lg:hidden"
             :class="mobileSidebarOpen ? 'app-sidebar-mobile-open' : 'app-sidebar-mobile-closed'"
           >
-          <AppSidebar mode="mobile" />
+            <AppSidebar mode="mobile" />
           </div>
 
           <div
@@ -25,6 +25,8 @@
         </div>
       </div>
     </div>
+
+    <CreateSpaceModal />
   </div>
 </template>
 
@@ -32,6 +34,7 @@
 import { storeToRefs } from 'pinia'
 import AppSidebar from '@/components/app/AppSidebar.vue'
 import AppTopbar from '@/components/app/AppTopbar.vue'
+import CreateSpaceModal from '@/components/app/spaces/CreateSpaceModal.vue'
 import { useSidebarStore } from '@/stores/sidebar'
 
 const sidebarStore = useSidebarStore()

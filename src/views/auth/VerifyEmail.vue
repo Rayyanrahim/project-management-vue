@@ -5,7 +5,12 @@
 
       <div class="auth-panel">
         <form class="space-y-4" @submit.prevent="onSubmit">
-          <PinInput v-model="formData.otp" :length="6" input-class="h-13 w-13 text-2xl" />
+          <PinInput
+            v-model="formData.otp"
+            variant="auth"
+            :length="6"
+            input-class="h-13 w-13 text-2xl"
+          />
           <FormError :message="errors.otp" />
 
           <div class="space-y-1 text-center">

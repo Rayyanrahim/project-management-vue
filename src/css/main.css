@@ -3,8 +3,10 @@
 @import './app.css';
 
 @theme {
-  --color-primary: #553ED0;
+  --color-primary: #553ED0; 
   --color-primary-hover: #983eeb;
+  --color-primary-ring: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  --color-primary-ring: color-mix(in srgb, var(--color-primary) 18%, transparent);
   --color-border-default: #dbe1ea;
   --color-surface-muted: #e8e8e8;
   --color-app-black: #202020;
