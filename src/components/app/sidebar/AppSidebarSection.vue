@@ -1,21 +1,47 @@
 <script setup lang="ts">
+import { Plus } from '@lucide/vue'
 import sidebarTriangleIcon from '@/assets/sidebar-triangle.svg'
 import type { SidebarSection } from '@/config/navlink'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { IconButton } from '@/components/ui/icon-button'
+import { useModalStore } from '@/stores/modal'
 import AppSidebarNavItem from './AppSidebarNavItem.vue'
 
-defineProps<{
+const props = defineProps<{
   section: SidebarSection
 }>()
+
+const modalStore = useModalStore()
+
+function onAddClick(event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+
+  if (!props.section.showAdd || !props.section.addAction) return
+
+  modalStore.handleAction(props.section.addAction, {
+    sectionId: props.section.id,
+  })
+}
 </script>
 
 <template>
   <div v-if="!section.collapsible" class="space-y-1">
     <div
       v-if="section.heading"
-      class="app-control-height flex items-center px-2 text-left text-xs font-medium text-[var(--color-app-muted)]"
+      class="app-control-height flex items-center justify-between gap-1 px-2 text-left text-xs font-medium text-[var(--color-app-muted)]"
     >
-      {{ section.heading }}
+      <span>{{ section.heading }}</span>
+      <IconButton
+        v-if="section.showAdd"
+        variant="ghost"
+        size="sm"
+        class="h-5 w-5 shrink-0 hover:bg-surface-muted"
+        aria-label="Add"
+        @click="onAddClick"
+      >
+        <Plus class="h-3.5 w-3.5 text-[var(--color-app-muted)]" />
+      </IconButton>
     </div>
 
     <AppSidebarNavItem
@@ -34,22 +60,37 @@ defineProps<{
   >
     <AccordionItem :value="section.id">
       <AccordionTrigger
-        class="app-control-height group mb-1 relative flex w-full items-center gap-1 rounded-lg px-2 text-left text-xs font-medium text-[var(--color-app-muted)] transition-colors cursor-pointer hover:bg-surface-muted hover:text-app-black"
+        class="app-control-height group mb-1 flex w-full items-center gap-1 rounded-lg px-2 text-left text-xs font-medium text-[var(--color-app-muted)] transition-colors cursor-pointer hover:bg-surface-muted hover:text-app-black"
       >
         <template #default="{ open }">
-          <span>{{ section.heading }}</span>
-          <span
-            class="absolute left-17 top-1.75 flex h-4 w-4 items-center justify-center transition-opacity"
-            :class="open ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'"
-          >
-            <img
-              :src="sidebarTriangleIcon"
-              alt=""
-              aria-hidden="true"
-              class="h-[10px] w-[10px] transition-transform"
-              :class="open ? 'rotate-90' : ''"
-            />
+          <span class="flex min-w-0 items-center gap-1">
+            <span>{{ section.heading }}</span>
+            <span
+              class="flex h-4 w-4 shrink-0 items-center justify-center transition-opacity"
+              :class="open ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'"
+            >
+              <img
+                :src="sidebarTriangleIcon"
+                alt=""
+                aria-hidden="true"
+                class="h-[10px] w-[10px] transition-transform"
+                :class="open ? 'rotate-90' : ''"
+              />
+            </span>
           </span>
+
+          <IconButton
+            v-if="section.showAdd"
+            as="span"
+            variant="ghost"
+            size="sm"
+            class="ml-auto h-5 w-5 shrink-0 hover:bg-surface-muted"
+            ariaLabel="Add"
+            @click="onAddClick"
+            @keydown.enter.prevent="onAddClick"
+          >
+            <Plus class="h-3.5 w-3.5 text-[var(--color-app-muted)]" />
+          </IconButton>
         </template>
       </AccordionTrigger>
 

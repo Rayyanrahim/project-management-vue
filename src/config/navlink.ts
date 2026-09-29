@@ -1,7 +1,10 @@
 import type { LucideIcon } from '@lucide/vue'
 import {
+  FolderKanban,
   House,
-  Inbox
+  Inbox,
+  Layers,
+  Users,
 } from '@lucide/vue'
 
 export type AppRouteName = string
@@ -25,6 +28,10 @@ export type SidebarSection = {
   heading?: string
   collapsible?: boolean
   defaultOpen?: boolean
+  /** Show plus IconButton on the right of the section header */
+  showAdd?: boolean
+  /** Modal id to open on plus click — handled by global modal store */
+  addAction?: string
   items: SidebarNavItem[]
 }
 
@@ -104,6 +111,21 @@ export const sidebarConfigs: SidebarConfigs = {
     primaryNav: [
       { id: 'home', label: 'Home', icon: House, to: { name: 'Dashboard' } },
       { id: 'inbox', label: 'Inbox', icon: Inbox, to: { name: 'Inbox' } },
+    ],
+    sections: [
+      {
+        id: 'spaces',
+        heading: 'Spaces',
+        collapsible: true,
+        defaultOpen: true,
+        showAdd: true,
+        addAction: 'create-space',
+        items: [
+          { id: 'team-space', label: 'Team Space', icon: Users, to: { name: 'TeamSpace' } },
+          { id: 'test', label: 'Test', icon: FolderKanban, to: { name: 'TestSpace' } },
+          { id: 'testing', label: 'Testing', icon: Layers, to: { name: 'TestingSpace' } },
+        ],
+      },
     ],
   },
 }
