@@ -196,25 +196,24 @@ function isComplete(status: DashboardStatus) {
           <div
             v-if="searchOpen"
             ref="searchWrap"
-            class="my-work-search flex h-6 w-[180px] shrink-0 items-center gap-1.5 overflow-hidden rounded-md border border-primary bg-white px-2.5 shadow-[0_0_0_2px_color-mix(in_srgb,var(--color-primary)_18%,transparent)]"
+            class="app-input-shell my-work-search h-6 w-[180px]"
           >
-            <Search class="h-3.5 w-3.5 shrink-0 text-primary" />
+            <Search class="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
             <Input
               ref="searchInput"
               v-model="searchQuery"
               type="search"
               placeholder="Search..."
-              class="h-auto min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-[13px] text-app-black shadow-none outline-none ring-0 placeholder:text-para focus:rounded-none focus:outline-none focus:ring-0"
               @keydown="onSearchKeydown"
             />
-            <button
-              type="button"
-              class="inline-flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center text-para hover:text-app-black"
-              aria-label="Close search"
+            <IconButton
+              variant="ghost"
+              ariaLabel="Close search"
+              class="h-4 w-4 shrink-0 text-para hover:bg-transparent hover:text-app-black"
               @click="closeSearch"
             >
               <X class="h-3 w-3" />
-            </button>
+            </IconButton>
           </div>
         </Transition>
         <IconButton
