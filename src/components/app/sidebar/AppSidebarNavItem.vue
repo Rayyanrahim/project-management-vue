@@ -23,8 +23,10 @@ const active = computed(() => isSidebarItemActive(route, props.item))
 const childActive = computed(
   () => props.item.children?.some((child) => isSidebarItemActive(route, child)) ?? false,
 )
-/** Parent space only looks active on its own page — not when a child project is selected */
-const isSelfActive = computed(() => active.value && !childActive.value)
+/** Active on own page; or when a child is active but accordion is collapsed */
+const isSelfActive = computed(
+  () => (active.value && !childActive.value) || (childActive.value && !expanded.value),
+)
 
 const expanded = ref(Boolean(props.item.defaultOpen) || childActive.value)
 const isAddHovered = ref(false)
@@ -114,7 +116,8 @@ function onAddLeave() {
         v-if="item.showAdd"
         variant="ghost"
         size="sm"
-        class="h-5 w-5 mr-2 shrink-0"
+        class="mr-2 h-5 w-5 shrink-0 transition-opacity"
+        :class="expanded ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
         ariaLabel="Add project"
         @click="onAddClick"
         @mouseenter="onAddEnter"
