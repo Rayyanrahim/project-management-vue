@@ -65,14 +65,17 @@ function updatePosition() {
     return
   }
 
-  const preferredMax = 260
+  const preferredMax = 320
   const spaceBelow = viewportH - rect.bottom - offset - margin
   const spaceAbove = rect.top - offset - margin
-  const placeAbove = spaceBelow < preferredMax && spaceAbove > spaceBelow
-  const maxHeight = Math.min(preferredMax, placeAbove ? spaceAbove : spaceBelow)
+  const needed = Math.min(contentHeight, preferredMax)
+  // Prefer below; only open above when it would overflow the viewport
+  const placeAbove = spaceBelow < needed && spaceAbove > spaceBelow
+  const maxHeight = Math.max(120, Math.min(preferredMax, placeAbove ? spaceAbove : spaceBelow))
+  const renderedHeight = Math.min(contentHeight, maxHeight)
 
   let top = placeAbove
-    ? rect.top - offset - Math.min(contentHeight, maxHeight)
+    ? rect.top - offset - renderedHeight
     : rect.bottom + offset
 
   top = Math.min(Math.max(margin, top), viewportH - margin - 40)
@@ -84,7 +87,7 @@ function updatePosition() {
     top: `${top}px`,
     left: `${left}px`,
     right: 'auto',
-    maxHeight: `${Math.max(200, maxHeight)}px`,
+    maxHeight: `${maxHeight}px`,
   }
 }
 

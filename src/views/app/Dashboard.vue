@@ -1,7 +1,7 @@
 <template>
   <div class="app-dashboard">
     <AppPageHeader>
-      <span class="text-[15px] font-semibold text-app-black">Home</span>
+      <span class="my-auto text-[15px] font-semibold text-app-black">Home</span>
     </AppPageHeader>
 
     <div class="min-h-0 flex-1 overflow-y-auto bg-page-bg">

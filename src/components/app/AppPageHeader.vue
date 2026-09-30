@@ -1,12 +1,17 @@
 <template>
   <div
-    class="flex min-h-[48px] items-center justify-between gap-2 border-b border-border-default px-4"
+    :class="
+      cn(
+        'flex min-h-[48px] items-center justify-between gap-2 border-b border-border-default px-4',
+        props.class,
+      )
+    "
   >
-    <div class="flex min-w-0 items-center gap-2">
+    <div class="flex min-w-0 flex-1 items-stretch gap-2">
       <IconButton
         v-if="mobileSidebarHidden"
         variant="ghost"
-        class="inline-flex cursor-pointer lg:hidden"
+        class="my-auto inline-flex cursor-pointer lg:hidden"
         aria-label="Open mobile sidebar"
         @click="sidebarStore.openSidebar('mobile')"
       >
@@ -16,7 +21,7 @@
       <IconButton
         v-if="desktopSidebarHidden"
         variant="ghost"
-        class="hidden cursor-pointer lg:inline-flex"
+        class="my-auto hidden cursor-pointer lg:inline-flex"
         aria-label="Open desktop sidebar"
         @click="sidebarStore.openSidebar('desktop')"
       >
@@ -33,10 +38,16 @@
 </template>
 
 <script setup lang="ts">
+import type { HTMLAttributes } from 'vue'
 import { storeToRefs } from 'pinia'
 import { PanelLeft } from '@lucide/vue'
 import { IconButton } from '@/components/ui/icon-button'
+import { cn } from '@/lib/utils'
 import { useSidebarStore } from '@/stores/sidebar'
+
+const props = defineProps<{
+  class?: HTMLAttributes['class']
+}>()
 
 const sidebarStore = useSidebarStore()
 const { desktopSidebarHidden, mobileSidebarHidden } = storeToRefs(sidebarStore)

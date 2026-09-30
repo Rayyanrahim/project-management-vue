@@ -27,6 +27,7 @@
     </div>
 
     <CreateSpaceModal />
+    <CreateProjectModal />
   </div>
 </template>
 
@@ -34,6 +35,7 @@
 import { storeToRefs } from 'pinia'
 import AppSidebar from '@/components/app/AppSidebar.vue'
 import AppTopbar from '@/components/app/AppTopbar.vue'
+import CreateProjectModal from '@/components/app/spaces/CreateProjectModal.vue'
 import CreateSpaceModal from '@/components/app/spaces/CreateSpaceModal.vue'
 import { useSidebarStore } from '@/stores/sidebar'
 

@@ -1,7 +1,7 @@
 <template>
   <div class="app-dashboard">
     <AppPageHeader>
-      <div class="flex min-w-0 items-center gap-2 text-[15px]">
+      <div class="my-auto flex min-w-0 items-center gap-2 text-[15px]">
         <RouterLink
           v-if="space"
           :to="{ name: 'Space', params: { spaceId: space.id } }"
