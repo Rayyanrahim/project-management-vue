@@ -3,6 +3,8 @@ import type { RouteRecordRaw } from 'vue-router'
 const AppLayout = () => import('@/layouts/AppLayout.vue')
 const Dashboard = () => import('@/views/app/Dashboard.vue')
 const Inbox = () => import('@/views/app/Inbox.vue')
+const Space = () => import('@/views/app/Space.vue')
+const Project = () => import('@/views/app/Project.vue')
 
 export const appRoutes: RouteRecordRaw[] = [
   {
@@ -21,19 +23,14 @@ export const appRoutes: RouteRecordRaw[] = [
         component: Inbox,
       },
       {
-        path: 'spaces/team',
-        name: 'TeamSpace',
-        component: Dashboard,
+        path: 'spaces/:spaceId',
+        name: 'Space',
+        component: Space,
       },
       {
-        path: 'spaces/test',
-        name: 'TestSpace',
-        component: Dashboard,
-      },
-      {
-        path: 'spaces/testing',
-        name: 'TestingSpace',
-        component: Dashboard,
+        path: 'spaces/:spaceId/projects/:projectId',
+        name: 'Project',
+        component: Project,
       },
     ],
   },

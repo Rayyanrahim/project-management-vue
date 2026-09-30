@@ -21,12 +21,16 @@ function onClick() {
   if (props.disabled) return
   dropdown.toggle()
 }
+
+function setTriggerRef(element: unknown) {
+  dropdown.triggerRef.value = element instanceof HTMLElement ? element : null
+}
 </script>
 
 <template>
   <button
     :id="dropdown.triggerId"
-    ref="dropdown.triggerRef"
+    :ref="setTriggerRef"
     :type="type"
     :disabled="disabled"
     :aria-expanded="dropdown.open.value"

@@ -62,7 +62,7 @@
           align="end"
         >
           <div class="max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain">
-            <div class="px-3 pb-3 pt-1">
+            <div class="px-3 pb-3">
               <div class="flex items-start gap-2.5">
                 <div class="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet-600 text-sm font-semibold text-white">
                   {{ profileInitial }}

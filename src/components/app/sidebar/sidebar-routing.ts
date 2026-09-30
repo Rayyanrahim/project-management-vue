@@ -1,7 +1,7 @@
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { SidebarConfig, SidebarConfigs, SidebarMatch, SidebarNavItem } from '@/config/navlink'
 
-type RouteLike = Pick<RouteLocationNormalizedLoaded, 'name' | 'path'>
+type RouteLike = Pick<RouteLocationNormalizedLoaded, 'name' | 'path' | 'params'>
 
 export type ResolvedSidebarContext = Required<Pick<SidebarConfig, 'title'>> & {
   id: string
@@ -75,5 +75,12 @@ export function isSidebarItemActive(route: RouteLike, item: SidebarNavItem) {
     return matchesSidebarRule(route, item.match)
   }
 
-  return route.name === item.to.name
+  if (route.name !== item.to.name) return false
+
+  const params = item.to.params
+  if (!params) return true
+
+  return Object.entries(params).every(
+    ([key, value]) => String(route.params?.[key] ?? '') === String(value),
+  )
 }

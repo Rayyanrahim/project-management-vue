@@ -16,6 +16,7 @@ const rootRef = ref<HTMLElement | null>(null)
 const triggerRef = ref<HTMLElement | null>(null)
 const contentRef = ref<HTMLElement | null>(null)
 const ids = createDropdownIds()
+const suppressOutsideClick = ref(false)
 
 const open = computed<boolean>({
   get() {
@@ -40,7 +41,16 @@ function setOpen(value: boolean) {
 }
 
 function toggle() {
-  open.value = !open.value
+  const next = !open.value
+
+  if (next) {
+    suppressOutsideClick.value = true
+    requestAnimationFrame(() => {
+      suppressOutsideClick.value = false
+    })
+  }
+
+  open.value = next
 }
 
 function close() {
@@ -48,10 +58,13 @@ function close() {
 }
 
 function onDocumentPointerDown(event: MouseEvent) {
+  if (suppressOutsideClick.value) return
+
   const target = event.target
 
   if (!(target instanceof Node)) return
   if (rootRef.value?.contains(target)) return
+  if (contentRef.value?.contains(target)) return
 
   close()
 }

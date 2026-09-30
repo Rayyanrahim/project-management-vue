@@ -1,11 +1,6 @@
 import type { LucideIcon } from '@lucide/vue'
-import {
-  FolderKanban,
-  House,
-  Inbox,
-  Layers,
-  Users,
-} from '@lucide/vue'
+import { House, Inbox, ListTodo } from '@lucide/vue'
+import { spaces } from '@/data/spaces'
 
 export type AppRouteName = string
 
@@ -18,9 +13,15 @@ export type SidebarNavItem = {
   id: string
   label: string
   icon: LucideIcon
-  to: { name: AppRouteName }
+  to: { name: AppRouteName; params?: Record<string, string> }
   match?: SidebarMatch
   sidebarKey?: string
+  /** Nested submenu (e.g. projects under a space) */
+  children?: SidebarNavItem[]
+  defaultOpen?: boolean
+  /** Show plus on the right (e.g. create project inside space) */
+  showAdd?: boolean
+  addAction?: string
 }
 
 export type SidebarSection = {
@@ -28,9 +29,7 @@ export type SidebarSection = {
   heading?: string
   collapsible?: boolean
   defaultOpen?: boolean
-  /** Show plus IconButton on the right of the section header */
   showAdd?: boolean
-  /** Modal id to open on plus click — handled by global modal store */
   addAction?: string
   items: SidebarNavItem[]
 }
@@ -43,67 +42,32 @@ export type SidebarConfig = {
 
 export type SidebarConfigs = Record<string, SidebarConfig>
 
-// export const sidebarConfigs: SidebarConfigs = {
-//   workspace: {
-//     title: 'Home',
-//     primaryNav: [
-//       { id: 'home', label: 'Home', icon: House, to: { name: 'Dashboard' } },
-//       { id: 'drafts', label: 'Drafts', icon: FileText, to: { name: 'Drafts' } },
-//       { id: 'your-work', label: 'Your work', icon: UserRound, to: { name: 'YourWork' } },
-//       { id: 'stickies', label: 'Stickies', icon: StickyNote, to: { name: 'Stickies' } },
-//       {
-//         id: 'settings',
-//         label: 'Settings',
-//         icon: SettingsIcon,
-//         to: { name: 'Settings' },
-//         match: { type: 'route-names', value: ['Settings', 'SettingsProfile', 'SettingsNotifications'] },
-//         sidebarKey: 'settings',
-//       },
-//     ],
-//     sections: [
-//       {
-//         id: 'workspace',
-//         heading: 'Workspace',
-//         collapsible: true,
-//         defaultOpen: true,
-//         items: [
-//           { id: 'projects', label: 'Projects', icon: Briefcase, to: { name: 'Dashboard' } },
-//         ],
-//       },
-//     ],
-//   },
-//   settings: {
-//     title: 'Settings',
-//     primaryNav: [
-//       { id: 'settings-overview', label: 'General', icon: SettingsIcon, to: { name: 'Settings' } },
-//       { id: 'profile', label: 'Profile', icon: UserRound, to: { name: 'SettingsProfile' } },
-//       {
-//         id: 'notifications',
-//         label: 'Notifications',
-//         icon: Bell,
-//         to: { name: 'SettingsNotifications' },
-//       },
-//     ],
-//     sections: [
-//       {
-//         id: 'settings-links',
-//         heading: 'Preferences',
-//         items: [
-//           { id: 'profile-link', label: 'Profile', icon: UserRound, to: { name: 'SettingsProfile' } },
-//           {
-//             id: 'notifications-link',
-//             label: 'Notifications',
-//             icon: Bell,
-//             to: { name: 'SettingsNotifications' },
-//           },
-//         ],
-//       },
-//     ],
-//   },
-
-// }
-
-
+/** Maps static/API spaces → sidebar items (projects as children) */
+export function mapSpacesToNavItems(): SidebarNavItem[] {
+  return spaces.map((space) => ({
+    id: space.id,
+    label: space.name,
+    icon: space.icon,
+    to: { name: 'Space', params: { spaceId: space.id } },
+    match: { type: 'route-prefix', value: `/spaces/${space.id}` },
+    defaultOpen: true,
+    showAdd: true,
+    addAction: 'create-project',
+    children: space.projects.map((project) => ({
+      id: `${space.id}-${project.id}`,
+      label: project.name,
+      icon: project.icon ?? ListTodo,
+      to: {
+        name: 'Project',
+        params: { spaceId: space.id, projectId: project.id },
+      },
+      match: {
+        type: 'route-prefix',
+        value: `/spaces/${space.id}/projects/${project.id}`,
+      },
+    })),
+  }))
+}
 
 export const sidebarConfigs: SidebarConfigs = {
   workspace: {
@@ -120,11 +84,7 @@ export const sidebarConfigs: SidebarConfigs = {
         defaultOpen: true,
         showAdd: true,
         addAction: 'create-space',
-        items: [
-          { id: 'team-space', label: 'Team Space', icon: Users, to: { name: 'TeamSpace' } },
-          { id: 'test', label: 'Test', icon: FolderKanban, to: { name: 'TestSpace' } },
-          { id: 'testing', label: 'Testing', icon: Layers, to: { name: 'TestingSpace' } },
-        ],
+        items: mapSpacesToNavItems(),
       },
     ],
   },

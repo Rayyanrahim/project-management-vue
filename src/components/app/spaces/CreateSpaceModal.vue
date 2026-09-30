@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { Button } from '@/components/ui/button'
+import { IconPicker } from '@/components/ui/icon-picker'
 import { Input } from '@/components/ui/input'
 import { Modal, ModalContent, ModalFooter, ModalHeader } from '@/components/ui/modal'
 import { Switch } from '@/components/ui/switch'
@@ -18,6 +19,8 @@ const open = computed({
 const name = ref('')
 const description = ref('')
 const isPrivate = ref(false)
+const selectedIcon = ref<string | null>(null)
+const iconColor = ref('#646464')
 
 const iconLetter = computed(() => {
   const trimmed = name.value.trim()
@@ -29,11 +32,12 @@ watch(open, (isOpen) => {
     name.value = ''
     description.value = ''
     isPrivate.value = false
+    selectedIcon.value = null
+    iconColor.value = '#646464'
   }
 })
 
 function onContinue() {
-  // Form submit wiring later
   modalStore.closeModal()
 }
 </script>
@@ -58,13 +62,11 @@ function onContinue() {
           Icon &amp; name
         </label>
         <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border-default bg-white text-[14px] font-medium text-para transition-colors hover:bg-surface-hover"
-            aria-label="Choose space icon"
-          >
-            {{ iconLetter }}
-          </button>
+          <IconPicker
+            v-model="selectedIcon"
+            v-model:color="iconColor"
+            :fallback-letter="iconLetter"
+          />
           <Input
             v-model="name"
             placeholder="e.g. Marketing, Engineering, HR"
@@ -95,8 +97,7 @@ function onContinue() {
       </div>
     </ModalContent>
 
-    <ModalFooter class="px-5 py-4 justify-end">
-
+    <ModalFooter class="justify-end px-5 py-4">
       <Button class="min-w-[96px] px-4" @click="onContinue">
         Continue
       </Button>
