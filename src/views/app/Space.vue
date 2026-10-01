@@ -21,20 +21,9 @@
 
             <div class="flex h-8 w-full items-stretch">
               <TabsList class="flex h-full min-w-0 items-stretch gap-1 overflow-x-auto">
-                <TabsTrigger
-                  v-for="tab in viewTabs"
-                  :key="tab.id"
-                  :value="tab.id"
-                  size="sm"
-                  class="h-full min-h-0 py-0"
-                  inner-class="gap-1 px-1.5 py-1 text-[12px] font-medium leading-none"
-                >
-                  <img
-                    :src="tab.icon"
-                    alt=""
-                    aria-hidden="true"
-                    class="h-3.5 w-3.5 shrink-0"
-                  />
+                <TabsTrigger v-for="tab in viewTabs" :key="tab.id" :value="tab.id" size="sm" class="h-full min-h-0 py-0"
+                  inner-class="gap-1 px-1.5 py-1 text-[12px] font-medium leading-none">
+                  <img :src="tab.icon" alt="" aria-hidden="true" class="h-3.5 w-3.5 shrink-0" />
                   {{ tab.label }}
                 </TabsTrigger>
               </TabsList>
@@ -42,19 +31,8 @@
           </div>
         </AppPageHeader>
 
-        <div
-          class="flex h-9 items-center justify-between gap-2 border-b border-border-default px-3"
-        >
-          <div class="flex min-w-0 items-center gap-1">
-            <Button
-              variant="app-outline"
-              size="md"
-              class="h-6 gap-1 rounded-md px-1.5 text-[12px] font-medium leading-none"
-            >
-              <Rows3 class="h-3 w-3" />
-              Status
-            </Button>
-          </div>
+
+        <div class="flex h-9 items-center justify-end gap-2 mt-2 px-3">
 
           <div class="flex shrink-0 items-center gap-0.5">
             <IconButton variant="ghost" size="sm" class="h-6 w-6" ariaLabel="Search">
@@ -71,12 +49,7 @@
           <SpaceListView :space="space" />
         </TabsContent>
 
-        <TabsContent
-          v-for="tab in placeholderTabs"
-          :key="tab.id"
-          :value="tab.id"
-          class="flex min-h-0 flex-1 flex-col"
-        >
+        <TabsContent v-for="tab in placeholderTabs" :key="tab.id" :value="tab.id" class="flex min-h-0 flex-1 flex-col">
           <div class="flex flex-1 items-center justify-center bg-page-bg px-4">
             <p class="text-[14px] text-para">{{ tab.label }} view coming soon.</p>
           </div>

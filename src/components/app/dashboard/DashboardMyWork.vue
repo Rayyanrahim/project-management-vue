@@ -2,7 +2,6 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import {
   AlignLeft,
-  Check,
   CheckCircle2,
   Flag,
   Paperclip,
@@ -27,11 +26,49 @@ import { IconButton } from '@/components/ui/icon-button'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
 import { Tag } from '@/components/ui/tag'
+import {
+  STATUS_BADGE_META,
+  STATUS_BADGE_ORDER,
+  StatusBadge,
+  StatusBadgeIcon,
+  type StatusBadgeOverrides,
+  type StatusBadgeStatus,
+} from '@/components/ui/status-badge'
 import type { DashboardStatus, DashboardWorkItem } from './types'
 
-const props = defineProps<{
-  items: DashboardWorkItem[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    items: DashboardWorkItem[]
+    /** Optional per-status customization (label, icon, colors, class) */
+    statusOverrides?: Partial<Record<StatusBadgeStatus, StatusBadgeOverrides>>
+    /** Custom group order; defaults to STATUS_BADGE_ORDER */
+    statusOrder?: StatusBadgeStatus[]
+  }>(),
+  {
+    statusOverrides: () => ({}),
+    statusOrder: () => [...STATUS_BADGE_ORDER],
+  },
+)
+
+/** Map dashboard task statuses → shared StatusBadge statuses (customize here if needed) */
+const DASHBOARD_STATUS_MAP: Record<DashboardStatus, StatusBadgeStatus> = {
+  todo: 'in-progress',
+  in_progress: 'in-progress',
+  review: 'pending-review',
+  done: 'completed',
+  overdue: 'blocked',
+}
+
+function toBadgeStatus(status: DashboardStatus): StatusBadgeStatus {
+  return DASHBOARD_STATUS_MAP[status]
+}
+
+function metaFor(status: StatusBadgeStatus) {
+  const base = STATUS_BADGE_META[status]
+  const overrides = props.statusOverrides?.[status]
+  if (!overrides) return base
+  return { ...base, ...overrides }
+}
 
 type SortKey = 'name' | 'priority' | 'due'
 
@@ -95,24 +132,27 @@ function sortItems(items: DashboardWorkItem[]) {
 }
 
 const groups = computed(() => {
-  const completed = props.items.filter((item) => item.status === 'done' && matchesSearch(item))
-  const active = props.items.filter((item) => item.status !== 'done' && matchesSearch(item))
+  const byStatus = new Map<StatusBadgeStatus, DashboardWorkItem[]>()
 
-  return [
-    {
-      id: 'done',
-      label: 'COMPLETED',
-      badgeClass: 'bg-success text-white',
-      items: sortItems(completed),
-    },
-    {
-      id: 'active',
-      label: 'TO DO',
-      badgeClass: 'bg-todo-badge-bg text-todo-badge',
-      items: sortItems(active),
-    },
-  ].filter((group) => group.items.length > 0)
+  for (const item of props.items) {
+    if (!matchesSearch(item)) continue
+    const status = toBadgeStatus(item.status)
+    const list = byStatus.get(status) ?? []
+    list.push(item)
+    byStatus.set(status, list)
+  }
+
+  return props.statusOrder
+    .filter((status) => (byStatus.get(status)?.length ?? 0) > 0)
+    .map((status) => ({
+      id: status,
+      status,
+      items: sortItems(byStatus.get(status) ?? []),
+      overrides: props.statusOverrides?.[status],
+    }))
 })
+
+const defaultOpenGroups = computed(() => groups.value.map((group) => group.id))
 
 function toggleSort(key: SortKey) {
   if (sortKey.value === key) {
@@ -175,10 +215,6 @@ const priorityLabel: Record<DashboardWorkItem['priority'], string> = {
   low: 'Low',
   none: '',
 }
-
-function isComplete(status: DashboardStatus) {
-  return status === 'done'
-}
 </script>
 
 <template>
@@ -235,7 +271,7 @@ function isComplete(status: DashboardStatus) {
     </CardHeader>
 
     <CardContent class="max-h-[28rem] overflow-y-auto">
-      <Accordion type="multiple" :default-value="['done', 'active']">
+      <Accordion type="multiple" :default-value="defaultOpenGroups">
         <AccordionItem
           v-for="group in groups"
           :key="group.id"
@@ -252,18 +288,10 @@ function isComplete(status: DashboardStatus) {
                 aria-hidden="true"
               />
 
-              <span
-                class="inline-flex items-center gap-1.5 rounded-[4px] px-2 py-[3px] text-[11px] font-bold tracking-[0.02em]"
-                :class="group.badgeClass"
-              >
-                <span
-                  v-if="group.id === 'done'"
-                  class="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white"
-                >
-                  <Check class="h-2.5 w-2.5 text-success" stroke-width="3.5" />
-                </span>
-                {{ group.label }}
-              </span>
+              <StatusBadge
+                :status="group.status"
+                :overrides="group.overrides"
+              />
 
               <span class="text-[12px] font-semibold text-table-muted">{{ group.items.length }}</span>
             </template>
@@ -297,7 +325,7 @@ function isComplete(status: DashboardStatus) {
 
               <TableBody>
                 <TableRow v-for="item in group.items" :key="item.id">
-                  <TableCell class="group/name flex items-center gap-1.5 overflow-hidden px-0 py-2.5 pr-1">
+                  <TableCell class="group/name flex items-center gap-2 overflow-hidden px-0 py-2.5 pr-1">
                     <button
                       type="button"
                       class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-table-muted opacity-0 transition-colors hover:bg-table-head-hover group-hover/name:opacity-100"
@@ -308,16 +336,12 @@ function isComplete(status: DashboardStatus) {
                       <Play class="h-2 w-2 fill-current" />
                     </button>
 
-                    <span
-                      class="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                      :class="
-                        isComplete(item.status)
-                          ? 'bg-success text-white'
-                          : 'border-[1.5px] border-priority-none bg-white'
-                      "
-                    >
-                      <Check v-if="isComplete(item.status)" class="h-2.5 w-2.5" stroke-width="3.5" />
-                    </span>
+                    <StatusBadgeIcon
+                      :kind="metaFor(group.status).icon"
+                      :check-on-badge-class="metaFor(group.status).checkOnBadgeClass"
+                      :check-row-bg-class="metaFor(group.status).checkRowBgClass"
+                      :class="`h-4 w-4 ${metaFor(group.status).rowIconClass}`"
+                    />
 
                     <span class="min-w-0 truncate text-[13px] font-semibold leading-5 text-table-title">
                       {{ item.title }}
