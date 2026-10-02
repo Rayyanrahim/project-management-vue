@@ -2,12 +2,10 @@
 import { computed, ref } from 'vue'
 import {
   AlignLeft,
-  ChevronDown,
   Ellipsis,
   Flag,
   Paperclip,
   Play,
-  Plus,
   UserRound,
 } from '@lucide/vue'
 import type { Space } from '@/data/spaces'
@@ -152,13 +150,18 @@ function directionFor(key: SortKey): TableSortDirection | false {
           </div>
 
           <AccordionTrigger
-            class="group flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left hover:bg-table-hover"
+            class="group flex w-full cursor-pointer items-center gap-2 px-4 pt-2 mb-8 text-left hover:bg-table-hover"
           >
             <template #default="{ open }">
-              <ChevronDown
-                class="h-4 w-4 shrink-0 text-para transition-transform"
-                :class="open ? '' : '-rotate-90'"
-              />
+              <span
+                class="inline-flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-md text-table-muted transition-colors hover:bg-table-head-hover"
+                aria-hidden="true"
+              >
+                <Play
+                  class="h-2.5 w-2.5 fill-current transition-transform"
+                  :class="open ? 'rotate-90' : ''"
+                />
+              </span>
               <span class="min-w-0 flex-1 truncate text-[14px] font-semibold text-app-black">
                 {{ project.name }}
               </span>
@@ -191,25 +194,24 @@ function directionFor(key: SortKey): TableSortDirection | false {
                 >
                   <template #default="{ open }">
                     <span
-                      class="inline-block h-0 w-0 shrink-0 border-x-[3.5px] border-x-transparent border-t-[5px] border-t-table-head transition-transform"
-                      :class="open ? '' : '-rotate-90'"
+                      class="inline-flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-md text-table-muted transition-colors hover:bg-table-head-hover"
                       aria-hidden="true"
-                    />
+                    >
+                      <Play
+                        class="h-2.5 w-2.5 fill-current transition-transform"
+                        :class="open ? 'rotate-90' : ''"
+                      />
+                    </span>
 
-                    <StatusBadge :status="group.id" :label="group.label" />
+                    <StatusBadge
+                      :status="group.id"
+                      :label="group.label"
+                      class="cursor-pointer"
+                    />
 
                     <span class="text-[12px] font-semibold text-table-muted">
                       {{ group.tasks.length }}
                     </span>
-
-                    <button
-                      type="button"
-                      class="ml-auto inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-hover"
-                      aria-label="Add task"
-                      @click.stop
-                    >
-                      <Plus class="h-3 w-3" stroke-width="3" />
-                    </button>
                   </template>
                 </AccordionTrigger>
 
@@ -251,12 +253,12 @@ function directionFor(key: SortKey): TableSortDirection | false {
                         <TableCell class="group/name flex items-center gap-2 overflow-hidden px-0 py-2.5 pr-1">
                           <button
                             type="button"
-                            class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-none bg-transparent text-table-muted opacity-0 transition-colors hover:bg-table-head-hover group-hover/name:opacity-100"
+                            class="inline-flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-md border-none bg-transparent text-table-muted opacity-0 transition-colors hover:bg-table-head-hover group-hover/name:opacity-100"
                             title="Create subtask"
                             aria-label="Create subtask"
                             @click.stop
                           >
-                            <Play class="h-2 w-2 fill-current" />
+                            <Play class="h-2.5 w-2.5 fill-current" />
                           </button>
 
                           <StatusBadgeIcon
