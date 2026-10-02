@@ -5,6 +5,7 @@ import { Check } from '@lucide/vue'
 import { cn } from '@/lib/utils'
 import statusPausedIcon from '@/assets/svg/status-paused.svg?raw'
 import statusPendingReviewIcon from '@/assets/svg/status-pending-review.svg?raw'
+import statusQaIcon from '@/assets/svg/status-qa.svg?raw'
 import statusQaRejectedIcon from '@/assets/svg/status-qa-rejected.svg?raw'
 import type { StatusBadgeIconKind } from '.'
 
@@ -25,6 +26,7 @@ const props = withDefaults(
 const assetIcons: Partial<Record<StatusBadgeIconKind, string>> = {
   paused: statusPausedIcon,
   'pending-review': statusPendingReviewIcon,
+  qa: statusQaIcon,
   'qa-rejected': statusQaRejectedIcon,
 }
 

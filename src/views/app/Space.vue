@@ -49,10 +49,8 @@
           <SpaceListView :space="space" />
         </TabsContent>
 
-        <TabsContent v-for="tab in placeholderTabs" :key="tab.id" :value="tab.id" class="flex min-h-0 flex-1 flex-col">
-          <div class="flex flex-1 items-center justify-center bg-page-bg px-4">
-            <p class="text-[14px] text-para">{{ tab.label }} view coming soon.</p>
-          </div>
+        <TabsContent value="board" class="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <SpaceKanbanBoard :space="space" />
         </TabsContent>
       </Tabs>
     </template>
@@ -70,9 +68,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Plus, Rows3, Search, Share2, Star } from '@lucide/vue'
+import { Plus, Search, Share2, Star } from '@lucide/vue'
 import { useRoute } from 'vue-router'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
+import SpaceKanbanBoard from '@/components/app/spaces/SpaceKanbanBoard.vue'
 import SpaceListView from '@/components/app/spaces/SpaceListView.vue'
 import { Button } from '@/components/ui/button'
 import { IconButton } from '@/components/ui/icon-button'
@@ -93,6 +92,4 @@ const viewTabs = [
   { id: 'list', label: 'List', icon: viewListIcon },
   { id: 'board', label: 'Board', icon: viewBoardIcon },
 ]
-
-const placeholderTabs = viewTabs.filter((tab) => tab.id !== 'list')
 </script>

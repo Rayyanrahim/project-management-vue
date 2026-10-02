@@ -9,6 +9,7 @@ export type StatusBadgeStatus =
   | 'todo'
   | 'in-progress'
   | 'paused'
+  | 'qa'
   | 'pending-review'
   | 'blocked'
   | 'qa-rejected'
@@ -23,6 +24,7 @@ export type StatusBadgeIconKind =
   | 'check'
   | 'paused'
   | 'pending-review'
+  | 'qa'
   | 'qa-rejected'
   | 'cancelled'
   | 'closed'
@@ -51,6 +53,7 @@ export const statusBadgeVariants = cva(
         todo: 'bg-todo-badge-bg text-todo-badge',
         'in-progress': 'bg-[#0091f7] text-white',
         paused: 'bg-[#ffc125] text-[#1a1a1a]',
+        qa: 'bg-[#5f6368] text-white',
         'pending-review': 'bg-[#9c27b0] text-white',
         blocked: 'bg-[#ff6b00] text-white',
         'qa-rejected': 'bg-[#c53030] text-white',
@@ -70,8 +73,9 @@ export const STATUS_BADGE_META: Record<StatusBadgeStatus, StatusBadgeMeta> = {
   todo: { label: 'TO DO', icon: 'wedge', rowIconClass: 'text-todo-badge' },
   'in-progress': { label: 'IN PROGRESS', icon: 'wedge', rowIconClass: 'text-[#0091f7]' },
   paused: { label: 'PAUSED', icon: 'paused', rowIconClass: 'text-[#ffc125]' },
+  qa: { label: 'QA', icon: 'qa', rowIconClass: 'text-[#5f6368]' },
   'pending-review': {
-    label: 'PENDING REVIEW',
+    label: 'QA PENDING REVIEW',
     icon: 'pending-review',
     rowIconClass: 'text-[#9c27b0]',
   },
@@ -111,6 +115,7 @@ export const STATUS_BADGE_ORDER: StatusBadgeStatus[] = [
   'todo',
   'in-progress',
   'paused',
+  'qa',
   'pending-review',
   'blocked',
   'qa-rejected',

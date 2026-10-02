@@ -217,8 +217,22 @@ const tasksByProject: Record<string, RawGroup[]> = {
       ],
     },
     {
+      id: 'qa',
+      label: 'QA',
+      tasks: [
+        {
+          id: 't-qa-1',
+          title: 'App: Featured Images',
+          priority: 'low',
+          assignee: 'RR',
+          dueDate: 'Aug 6',
+          hasDescription: true,
+        },
+      ],
+    },
+    {
       id: 'pending-review',
-      label: 'PENDING REVIEW',
+      label: 'QA PENDING REVIEW',
       tasks: [
         {
           id: 't5e',
@@ -327,7 +341,7 @@ const tasksByProject: Record<string, RawGroup[]> = {
     },
     {
       id: 'pending-review',
-      label: 'PENDING REVIEW',
+      label: 'QA PENDING REVIEW',
       tasks: [
         {
           id: 't9c',
@@ -362,6 +376,7 @@ const STATUS_ORDER: SpaceTaskStatus[] = [
   'todo',
   'in-progress',
   'paused',
+  'qa',
   'pending-review',
   'blocked',
   'qa-rejected',
@@ -378,6 +393,7 @@ const STATUS_META: Record<SpaceTaskStatus, { label: string; badgeClass: string }
     badgeClass: badgeClassFor('in-progress'),
   },
   paused: { label: STATUS_BADGE_META.paused.label, badgeClass: badgeClassFor('paused') },
+  qa: { label: STATUS_BADGE_META.qa.label, badgeClass: badgeClassFor('qa') },
   'pending-review': {
     label: STATUS_BADGE_META['pending-review'].label,
     badgeClass: badgeClassFor('pending-review'),
