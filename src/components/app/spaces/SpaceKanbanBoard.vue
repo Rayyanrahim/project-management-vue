@@ -22,6 +22,8 @@ const emit = defineEmits<{
   move: [payload: KanbanMovePayload]
   /** Bubble for future API: create task in column */
   'add-task': [columnId: string]
+  /** Bubble for future API: create status/group column */
+  'add-group': []
 }>()
 
 function toColumns(spaceId: string): KanbanColumnData[] {
@@ -93,6 +95,11 @@ function onAddItem(columnId: string) {
   })
   // Later: const created = await api.createTask(...); target.items.push(created)
 }
+
+function onAddGroup() {
+  emit('add-group')
+  // Later: open create-status modal / await api.createStatusGroup(...)
+}
 </script>
 
 <template>
@@ -101,6 +108,7 @@ function onAddItem(columnId: string) {
       v-model:columns="columns"
       @move="onMove"
       @add-item="onAddItem"
+      @add-group="onAddGroup"
     />
   </div>
 </template>

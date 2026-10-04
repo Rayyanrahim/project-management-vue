@@ -48,6 +48,29 @@
   flex: 1;
   flex-direction: column;
   overflow: hidden;
+  --add-button-color: #8c8c8c;
+  --button-background-hover: color-mix(in srgb, var(--add-button-color) 15%, transparent);
+  --button-background-active: color-mix(in srgb, var(--add-button-color) 25%, transparent);
+}
+
+/* Resolve mix on the button so each column's --add-button-color applies */
+.kanban-add-task:hover {
+  background-color: color-mix(in srgb, var(--add-button-color) 15%, transparent);
+}
+
+.kanban-add-task:active {
+  background-color: color-mix(in srgb, var(--add-button-color) 25%, transparent);
+}
+
+.kanban-card-placeholder {
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.kanban-card-floating {
+  margin: 0 !important;
 }
 
 .app-dashboard-body {

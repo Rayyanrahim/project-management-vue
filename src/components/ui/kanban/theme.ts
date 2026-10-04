@@ -29,5 +29,21 @@ export const KANBAN_COLUMN_FOOTER_TINT: Record<StatusBadgeStatus, string> = {
   completed: 'text-success',
 }
 
+/** Hex used for Add Task hover/active via --add-button-color */
+export const KANBAN_ADD_BUTTON_COLOR: Record<StatusBadgeStatus, string> = {
+  open: '#8c8c8c',
+  todo: '#5f55c5',
+  'in-progress': '#0091f7',
+  paused: '#c99700',
+  qa: '#5f6368',
+  'pending-review': '#9c27b0',
+  blocked: '#ff6b00',
+  'qa-rejected': '#c53030',
+  cancelled: '#c53030',
+  closed: '#0d8043',
+  completed: '#008844',
+}
+
 export const KANBAN_DEFAULT_TINT = 'bg-[#f4f4f5]'
 export const KANBAN_DEFAULT_FOOTER = 'text-table-muted'
+export const KANBAN_DEFAULT_ADD_BUTTON_COLOR = '#8c8c8c'

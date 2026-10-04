@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Plus } from '@lucide/vue'
+import { Button } from '@/components/ui/button'
 import type { KanbanColumn, KanbanMovePayload } from './types'
 import KanbanColumnView from './KanbanColumn.vue'
 
 const columns = defineModel<KanbanColumn[]>('columns', { required: true })
 
 const emit = defineEmits<{
-  /** Fired after a successful move — wire to API here */
   move: [payload: KanbanMovePayload]
-  /** Fired when user clicks add — parent can create via API then push into columns */
   'add-item': [columnId: string]
+  'add-group': []
 }>()
 
 const draggingItemId = ref<string | null>(null)
@@ -37,7 +38,7 @@ function onItemDragEnd() {
   dropTargetColumnId.value = null
 }
 
-function onColumnDragOver(columnId: string) {
+function onColumnDragOver(columnId: string | null) {
   if (!draggingItemId.value) return
   dropTargetColumnId.value = columnId
 }
@@ -69,22 +70,37 @@ function onItemDrop(toColumnId: string) {
 </script>
 
 <template>
-  <!-- Board: no vertical page scroll — only OPEN column scrolls inside itself -->
-  <div class="flex min-h-0 flex-1 flex-col overflow-x-auto overflow-y-hidden">
-    <div class="flex h-full min-h-0 items-start gap-3 px-3 py-3">
+  <div class="min-h-0 flex-1 overflow-x-auto overflow-y-hidden">
+    <div class="flex h-full w-max min-w-full items-start gap-3 px-3 py-3">
       <KanbanColumnView
         v-for="column in columns"
         :key="column.id"
         :column="column"
         :dragging-item-id="draggingItemId"
-        :drop-active="dropTargetColumnId === column.id && dragFromColumnId !== column.id"
+        :drop-active="
+          !!dropTargetColumnId &&
+          dropTargetColumnId === column.id &&
+          dragFromColumnId !== column.id
+        "
         @item-dragstart="onItemDragStart"
         @item-dragend="onItemDragEnd"
         @item-drop="onItemDrop"
         @column-dragover="onColumnDragOver"
         @add-item="emit('add-item', $event)"
       />
-      <slot name="after-columns" />
+      <slot name="after-columns">
+        <div class="w-[280px] shrink-0">
+          <Button
+            variant="ghost"
+            size="md"
+            class="h-7 gap-1 px-2 text-[13px] font-medium text-table-muted"
+            @click="emit('add-group')"
+          >
+            <Plus class="h-3.5 w-3.5" stroke-width="2.5" />
+            Add group
+          </Button>
+        </div>
+      </slot>
     </div>
   </div>
 </template>

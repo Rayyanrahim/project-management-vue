@@ -13,7 +13,7 @@ export const buttonVariants = cva(
           'bg-white text-gray-900 outline-1 -outline-offset-1 outline-gray-300 hover:bg-gray-50 focus-visible:outline-primary',
         'app-outline':
           'bg-white text-gray-900 outline-1 -outline-offset-1 outline-[var(--color-border-default)] hover:bg-gray-50 focus-visible:outline-[var(--color-border-default)]',
-        ghost: 'hover:bg-surface-hover hover:text-app-black',
+        ghost: 'hover:bg-surface-hover text-para',
         subtle: 'bg-surface-hover hover:bg-gray-200 hover:text-app-black',
       },
       size: {

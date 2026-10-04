@@ -13,7 +13,7 @@
                 <Star class="h-3.5 w-3.5 shrink-0 text-para" />
               </div>
 
-              <Button variant="ghost" size="md" class="h-7 shrink-0 gap-1.5 px-2.5 text-sm">
+              <Button variant="ghost" size="md" class="h-7 text-para shrink-0 gap-1.5 px-2.5 text-sm">
                 <Share2 class="h-3.5 w-3.5" />
                 Share
               </Button>
