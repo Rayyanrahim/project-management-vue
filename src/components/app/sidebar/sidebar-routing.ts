@@ -19,6 +19,12 @@ export function matchesSidebarRule(route: RouteLike, match: SidebarMatch) {
     return route.name != null && match.value.includes(route.name as never)
   }
 
+  if (match.type === 'route-prefixes') {
+    return match.value.some(
+      (prefix) => route.path === prefix || route.path.startsWith(`${prefix}/`),
+    )
+  }
+
   return route.path === match.value || route.path.startsWith(`${match.value}/`)
 }
 

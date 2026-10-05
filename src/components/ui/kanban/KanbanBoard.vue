@@ -70,7 +70,7 @@ function onItemDrop(toColumnId: string) {
 </script>
 
 <template>
-  <div class="min-h-0 flex-1 overflow-x-auto overflow-y-hidden">
+  <div data-kanban-board-scroll class="min-h-0 flex-1 overflow-x-auto overflow-y-hidden">
     <div class="flex h-full w-max min-w-full items-start gap-3 px-3 py-3">
       <KanbanColumnView
         v-for="column in columns"

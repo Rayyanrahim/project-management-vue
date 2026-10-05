@@ -55,6 +55,53 @@ const dragTask = ref<KanbanCardItem | null>(null)
 const offset = ref({ x: 0, y: 0 })
 let placeholderEl: HTMLElement | null = null
 let lastOverColumnId: string | null = null
+let lastPointerX = 0
+let lastPointerY = 0
+let autoScrollRaf: number | null = null
+
+const AUTO_SCROLL_EDGE = 72
+const AUTO_SCROLL_MAX_SPEED = 22
+
+function getBoardScrollEl() {
+  return document.querySelector('[data-kanban-board-scroll]') as HTMLElement | null
+}
+
+function stopAutoScroll() {
+  if (autoScrollRaf == null) return
+  cancelAnimationFrame(autoScrollRaf)
+  autoScrollRaf = null
+}
+
+function tickAutoScroll() {
+  autoScrollRaf = null
+  if (!dragging.value || !dragEl.value) return
+
+  const board = getBoardScrollEl()
+  if (!board) return
+
+  const rect = board.getBoundingClientRect()
+  const x = lastPointerX
+  let dx = 0
+
+  if (x < rect.left + AUTO_SCROLL_EDGE) {
+    const t = 1 - (x - rect.left) / AUTO_SCROLL_EDGE
+    dx = -Math.ceil(AUTO_SCROLL_MAX_SPEED * Math.max(0, Math.min(1, t)))
+  } else if (x > rect.right - AUTO_SCROLL_EDGE) {
+    const t = 1 - (rect.right - x) / AUTO_SCROLL_EDGE
+    dx = Math.ceil(AUTO_SCROLL_MAX_SPEED * Math.max(0, Math.min(1, t)))
+  }
+
+  if (dx !== 0) {
+    board.scrollLeft += dx
+    setOverColumn(findOverColumnId(lastPointerX, lastPointerY))
+    autoScrollRaf = requestAnimationFrame(tickAutoScroll)
+  }
+}
+
+function startAutoScroll() {
+  if (autoScrollRaf != null) return
+  autoScrollRaf = requestAnimationFrame(tickAutoScroll)
+}
 
 function isInteractiveTarget(target: EventTarget | null) {
   if (!(target instanceof Element)) return false
@@ -80,6 +127,7 @@ function setOverColumn(columnId: string | null) {
 function cleanupPointerDrag(options?: { emitEnd?: boolean }) {
   const emitEnd = options?.emitEnd !== false
 
+  stopAutoScroll()
   window.removeEventListener('pointermove', onMove)
   window.removeEventListener('pointerup', onUp)
   window.removeEventListener('pointercancel', onUp)
@@ -98,6 +146,9 @@ function cleanupPointerDrag(options?: { emitEnd?: boolean }) {
     dragEl.value.style.opacity = ''
     dragEl.value.style.transform = ''
     dragEl.value.style.boxShadow = ''
+    dragEl.value.style.borderRadius = ''
+    dragEl.value.style.overflow = ''
+    dragEl.value.style.background = ''
   }
 
   document.body.style.userSelect = ''
@@ -151,6 +202,9 @@ function startPointerDrag(e: PointerEvent, task: KanbanCardItem) {
   el.style.pointerEvents = 'none'
   el.style.opacity = '1'
   el.style.transform = 'rotate(3deg)'
+  el.style.borderRadius = '8px'
+  el.style.overflow = 'hidden'
+  el.style.background = '#ffffff'
   el.style.boxShadow = '0 18px 45px rgba(15, 23, 42, 0.28)'
 
   document.body.style.userSelect = 'none'
@@ -161,13 +215,19 @@ function startPointerDrag(e: PointerEvent, task: KanbanCardItem) {
   window.addEventListener('pointercancel', onUp)
 
   setOverColumn(findOverColumnId(e.clientX, e.clientY))
+  lastPointerX = e.clientX
+  lastPointerY = e.clientY
+  startAutoScroll()
 }
 
 function onMove(e: PointerEvent) {
   if (!dragging.value || !dragEl.value) return
+  lastPointerX = e.clientX
+  lastPointerY = e.clientY
   dragEl.value.style.left = `${Math.round(e.clientX - offset.value.x)}px`
   dragEl.value.style.top = `${Math.round(e.clientY - offset.value.y)}px`
   setOverColumn(findOverColumnId(e.clientX, e.clientY))
+  startAutoScroll()
 }
 
 function onUp(e: PointerEvent) {
@@ -197,13 +257,7 @@ onBeforeUnmount(cleanupPointerDrag)
         :status="column.status"
         :label="column.label"
       />
-      <span
-        v-else
-        class="inline-flex items-center rounded-[4px] bg-surface-muted px-2 py-0.5 text-[12px] font-semibold text-app-black"
-      >
-        {{ column.label }}
-      </span>
-      <span class="text-[12px] font-semibold text-table-muted">{{ column.items.length }}</span>
+      <span class="text-[12px] font-semibold" :class="footerClass">{{ column.items.length }}</span>
 
       <div class="ml-auto flex items-center gap-0.5">
         <button

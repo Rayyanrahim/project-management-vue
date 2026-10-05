@@ -13,7 +13,7 @@
                 <Star class="h-3.5 w-3.5 shrink-0 text-para" />
               </div>
 
-              <Button variant="ghost" size="md" class="h-7 text-para shrink-0 gap-1.5 px-2.5 text-sm">
+              <Button variant="ghost" size="md" class="h-7 shrink-0 gap-1.5 px-2.5 text-sm text-para">
                 <Share2 class="h-3.5 w-3.5" />
                 Share
               </Button>
@@ -21,8 +21,14 @@
 
             <div class="flex h-8 w-full items-stretch">
               <TabsList class="flex h-full min-w-0 items-stretch gap-1 overflow-x-auto">
-                <TabsTrigger v-for="tab in viewTabs" :key="tab.id" :value="tab.id" size="sm" class="h-full min-h-0 py-0"
-                  inner-class="gap-1 px-1.5 py-1 text-[12px] font-medium leading-none">
+                <TabsTrigger
+                  v-for="tab in viewTabs"
+                  :key="tab.id"
+                  :value="tab.id"
+                  size="sm"
+                  class="h-full min-h-0 py-0"
+                  inner-class="gap-1 px-1.5 py-1 text-[12px] font-medium leading-none"
+                >
                   <img :src="tab.icon" alt="" aria-hidden="true" class="h-3.5 w-3.5 shrink-0" />
                   {{ tab.label }}
                 </TabsTrigger>
@@ -31,9 +37,7 @@
           </div>
         </AppPageHeader>
 
-
-        <div class="flex h-9 items-center justify-end gap-2 mt-2 px-3">
-
+        <div class="mt-2 flex h-9 items-center justify-end gap-2 px-3">
           <div class="flex shrink-0 items-center gap-0.5">
             <IconButton variant="ghost" size="sm" class="h-6 w-6" ariaLabel="Search">
               <Search class="h-3.5 w-3.5" />
@@ -67,9 +71,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { Plus, Search, Share2, Star } from '@lucide/vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import AppPageHeader from '@/components/app/AppPageHeader.vue'
 import SpaceKanbanBoard from '@/components/app/spaces/SpaceKanbanBoard.vue'
 import SpaceListView from '@/components/app/spaces/SpaceListView.vue'
@@ -81,11 +85,29 @@ import viewListIcon from '@/assets/svg/view-list.svg'
 import { findSpace } from '@/data/spaces'
 
 const route = useRoute()
-const activeView = ref('list')
+const router = useRouter()
 
 const space = computed(() => {
   const spaceId = String(route.params.spaceId ?? '')
   return findSpace(spaceId)
+})
+
+/** Route: /space/l/:id = list, /space/b/:id = board */
+const activeView = computed({
+  get() {
+    return route.params.view === 'b' ? 'board' : 'list'
+  },
+  set(view: string) {
+    const spaceId = String(route.params.spaceId ?? '')
+    if (!spaceId) return
+    void router.push({
+      name: 'Space',
+      params: {
+        view: view === 'board' ? 'b' : 'l',
+        spaceId,
+      },
+    })
+  },
 })
 
 const viewTabs = [

@@ -8,6 +8,7 @@ export type SidebarMatch =
   | { type: 'route-name'; value: AppRouteName }
   | { type: 'route-names'; value: AppRouteName[] }
   | { type: 'route-prefix'; value: string }
+  | { type: 'route-prefixes'; value: string[] }
 
 export type SidebarNavItem = {
   id: string
@@ -48,8 +49,11 @@ export function mapSpacesToNavItems(): SidebarNavItem[] {
     id: space.id,
     label: space.name,
     icon: space.icon,
-    to: { name: 'Space', params: { spaceId: space.id } },
-    match: { type: 'route-prefix', value: `/spaces/${space.id}` },
+    to: { name: 'Space', params: { view: 'l', spaceId: space.id } },
+    match: {
+      type: 'route-prefixes',
+      value: [`/space/l/${space.id}`, `/space/b/${space.id}`, `/spaces/${space.id}`],
+    },
     defaultOpen: true,
     showAdd: true,
     addAction: 'create-project',
@@ -59,11 +63,15 @@ export function mapSpacesToNavItems(): SidebarNavItem[] {
       icon: project.icon ?? ListTodo,
       to: {
         name: 'Project',
-        params: { spaceId: space.id, projectId: project.id },
+        params: { spaceId: space.id, projectId: project.id, view: 'l' },
       },
       match: {
-        type: 'route-prefix',
-        value: `/spaces/${space.id}/projects/${project.id}`,
+        type: 'route-prefixes',
+        value: [
+          `/spaces/${space.id}/projects/${project.id}/l`,
+          `/spaces/${space.id}/projects/${project.id}/b`,
+          `/spaces/${space.id}/projects/${project.id}`,
+        ],
       },
     })),
   }))

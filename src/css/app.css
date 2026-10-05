@@ -71,6 +71,9 @@
 
 .kanban-card-floating {
   margin: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
 }
 
 .app-dashboard-body {

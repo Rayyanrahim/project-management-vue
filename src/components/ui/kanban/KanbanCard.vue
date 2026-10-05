@@ -1,28 +1,13 @@
 <script setup lang="ts">
-import { AlignLeft, Calendar, Ellipsis, Flag, UserRound } from '@lucide/vue'
+import { AlignLeft, Ellipsis, UserRound } from '@lucide/vue'
 import { Card } from '@/components/ui/card'
-import type { KanbanCardItem, KanbanPriority } from './types'
+import { DueDateBadge, PriorityBadge } from '@/components/ui/meta-badge'
+import type { KanbanCardItem } from './types'
 
 defineProps<{
   item: KanbanCardItem
   dragging?: boolean
 }>()
-
-const priorityFlagClass: Record<KanbanPriority, string> = {
-  urgent: 'text-priority-urgent',
-  high: 'text-priority-high',
-  normal: 'text-priority-normal',
-  low: 'text-priority-low',
-  none: 'text-priority-none',
-}
-
-const priorityLabel: Record<KanbanPriority, string> = {
-  urgent: 'Urgent',
-  high: 'High',
-  normal: 'Normal',
-  low: 'Low',
-  none: '',
-}
 </script>
 
 <template>
@@ -65,27 +50,8 @@ const priorityLabel: Record<KanbanPriority, string> = {
       </span>
       <UserRound v-else class="h-4 w-4 text-table-icon" />
 
-      <span
-        v-if="item.dueDate"
-        class="inline-flex items-center gap-1 rounded-md border border-table-border bg-white px-1.5 py-0.5"
-      >
-        <Calendar class="h-3 w-3 text-table-icon" />
-        <span class="text-[11px] font-medium text-danger">{{ item.dueDate }}</span>
-      </span>
-
-      <span
-        v-if="item.priority && item.priority !== 'none'"
-        class="inline-flex items-center gap-1 rounded-md border border-table-border bg-white px-1.5 py-0.5"
-      >
-        <Flag
-          class="h-3 w-3"
-          :class="priorityFlagClass[item.priority]"
-          fill="currentColor"
-        />
-        <span class="text-[11px] font-medium text-table-muted">
-          {{ priorityLabel[item.priority] }}
-        </span>
-      </span>
+      <DueDateBadge v-if="item.dueDate" :date="item.dueDate" />
+      <PriorityBadge v-if="item.priority" :priority="item.priority" />
     </div>
   </Card>
 </template>

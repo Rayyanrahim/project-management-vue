@@ -23,14 +23,32 @@ export const appRoutes: RouteRecordRaw[] = [
         component: Inbox,
       },
       {
-        path: 'spaces/:spaceId',
+        path: 'space/:view(l|b)/:spaceId',
         name: 'Space',
         component: Space,
       },
       {
-        path: 'spaces/:spaceId/projects/:projectId',
+        path: 'spaces/:spaceId',
+        redirect: (to) => ({
+          name: 'Space',
+          params: { view: 'l', spaceId: to.params.spaceId as string },
+        }),
+      },
+      {
+        path: 'spaces/:spaceId/projects/:projectId/:view(l|b)',
         name: 'Project',
         component: Project,
+      },
+      {
+        path: 'spaces/:spaceId/projects/:projectId',
+        redirect: (to) => ({
+          name: 'Project',
+          params: {
+            spaceId: to.params.spaceId as string,
+            projectId: to.params.projectId as string,
+            view: 'l',
+          },
+        }),
       },
     ],
   },
