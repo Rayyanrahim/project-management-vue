@@ -10,7 +10,6 @@
                 <span class="truncate text-[15px] font-semibold text-app-black">
                   {{ space.name }}
                 </span>
-                <Star class="h-3.5 w-3.5 shrink-0 text-para" />
               </div>
 
               <Button variant="ghost" size="md" class="h-7 shrink-0 gap-1.5 px-2.5 text-sm text-para">

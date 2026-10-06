@@ -32,8 +32,12 @@ import {
   TableAddRow,
   TableBody,
   TableCell,
+  TableDrag,
+  TableDragGroup,
   TableHead,
   TableRow,
+  applyTableDragMove,
+  type TableDragMovePayload,
   type TableSortDirection,
 } from '@/components/ui/table'
 import { KANBAN_COLUMN_FOOTER_TINT, KANBAN_DEFAULT_FOOTER } from '@/components/ui/kanban/theme'
@@ -130,8 +134,14 @@ function countClass(status: SpaceTaskStatus) {
   return KANBAN_COLUMN_FOOTER_TINT[status] ?? KANBAN_DEFAULT_FOOTER
 }
 
-const statusGroups = computed(() => {
-  const existing = getProjectStatusGroups(props.space.id, props.project.id)
+type ProjectStatusGroup = {
+  id: StatusBadgeStatus
+  label: string
+  tasks: SpaceTask[]
+}
+
+function loadGroups(spaceId: string, projectId: string): ProjectStatusGroup[] {
+  const existing = getProjectStatusGroups(spaceId, projectId)
   const byId = new Map(existing.map((group) => [group.id, group]))
 
   return STATUS_ORDER.map((id) => {
@@ -142,10 +152,12 @@ const statusGroups = computed(() => {
       tasks: sortTasks(group?.tasks ?? []),
     }
   })
-})
+}
+
+const groups = ref<ProjectStatusGroup[]>(loadGroups(props.space.id, props.project.id))
 
 const defaultOpenIds = computed(() =>
-  statusGroups.value.filter((group) => group.tasks.length > 0).map((group) => group.id),
+  groups.value.filter((group) => group.tasks.length > 0).map((group) => group.id),
 )
 
 const openGroups = ref<string[]>([...defaultOpenIds.value])
@@ -153,6 +165,7 @@ const openGroups = ref<string[]>([...defaultOpenIds.value])
 watch(
   () => `${props.space.id}:${props.project.id}`,
   () => {
+    groups.value = loadGroups(props.space.id, props.project.id)
     openGroups.value = [...defaultOpenIds.value]
   },
 )
@@ -166,32 +179,75 @@ function isGroupOpen(groupId: string) {
 function toggleSort(key: SortKey) {
   if (sortKey.value === key) {
     sortDir.value = sortDir.value === 'desc' ? 'asc' : 'desc'
-    return
+  } else {
+    sortKey.value = key
+    sortDir.value = 'desc'
   }
 
-  sortKey.value = key
-  sortDir.value = 'desc'
+  groups.value = groups.value.map((group) => ({
+    ...group,
+    tasks: sortTasks(group.tasks),
+  }))
 }
 
 function directionFor(key: SortKey): TableSortDirection | false {
   return sortKey.value === key ? sortDir.value : false
 }
+
+function onMove(payload: TableDragMovePayload) {
+  applyTableDragMove(
+    groups.value.map((group) => ({ id: group.id, items: group.tasks })),
+    payload,
+  )
+
+  if (!openGroups.value.includes(payload.toGroupId)) {
+    openGroups.value = [...openGroups.value, payload.toGroupId]
+  }
+}
+
+let expandTimer: ReturnType<typeof setTimeout> | null = null
+
+function onGroupHover(groupId: string) {
+  if (openGroups.value.includes(groupId)) {
+    if (expandTimer != null) {
+      clearTimeout(expandTimer)
+      expandTimer = null
+    }
+    return
+  }
+
+  if (expandTimer != null) clearTimeout(expandTimer)
+  expandTimer = setTimeout(() => {
+    expandTimer = null
+    if (!openGroups.value.includes(groupId)) {
+      openGroups.value = [...openGroups.value, groupId]
+    }
+  }, 350)
+}
 </script>
 
 <template>
-  <div class="min-h-0 flex-1 overflow-auto bg-white px-1 mt-2 sm:px-2">
+  <TableDrag
+    class="mt-2 min-h-0 flex-1 overflow-auto bg-white px-1 sm:px-2"
+    @move="onMove"
+    @group-hover="onGroupHover"
+  >
     <Accordion
       :key="`${space.id}:${project.id}`"
       v-model="openGroups"
       type="multiple"
       class="pb-4"
     >
-      <AccordionItem
-        v-for="group in statusGroups"
+      <TableDragGroup
+        v-for="group in groups"
         :key="group.id"
-        :value="group.id"
-        class="relative"
+        :group-id="group.id"
+        :item-count="group.tasks.length"
       >
+        <AccordionItem
+          :value="group.id"
+          class="relative"
+        >
         <!-- Status + column headers stick together so rows never bleed above -->
         <div class="sticky top-0 z-20 bg-white">
           <AccordionTrigger
@@ -287,7 +343,12 @@ function directionFor(key: SortKey): TableSortDirection | false {
         <AccordionContent class="relative z-0">
           <Table :columns="TABLE_COLUMNS">
             <TableBody>
-              <TableRow v-for="task in group.tasks" :key="task.id">
+              <TableRow
+                v-for="(task, index) in group.tasks"
+                :key="task.id"
+                :drag-id="task.id"
+                :drag-index="index"
+              >
                 <TableCell class="group/name flex items-center gap-2 overflow-hidden px-0 py-2.5 pr-1">
                   <button
                     type="button"
@@ -372,7 +433,8 @@ function directionFor(key: SortKey): TableSortDirection | false {
             <TableAddRow />
           </Table>
         </AccordionContent>
-      </AccordionItem>
+        </AccordionItem>
+      </TableDragGroup>
     </Accordion>
-  </div>
+  </TableDrag>
 </template>
