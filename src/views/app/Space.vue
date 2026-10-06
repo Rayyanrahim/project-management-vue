@@ -11,11 +11,6 @@
                   {{ space.name }}
                 </span>
               </div>
-
-              <Button variant="ghost" size="md" class="h-7 shrink-0 gap-1.5 px-2.5 text-sm text-para">
-                <Share2 class="h-3.5 w-3.5" />
-                Share
-              </Button>
             </div>
 
             <div class="flex h-8 w-full items-stretch">
